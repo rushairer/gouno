@@ -15,6 +15,7 @@ var domainCmd = &cobra.Command{
 	Use:                   "domain [name]",
 	Short:                 "Generate domain",
 	Aliases:               []string{"d"},
+	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	Run:                   runDomain,
 }

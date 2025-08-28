@@ -15,6 +15,7 @@ var serviceCmd = &cobra.Command{
 	Use:                   "service [name]",
 	Short:                 "Generate service",
 	Aliases:               []string{"s"},
+	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	Run:                   runService,
 }

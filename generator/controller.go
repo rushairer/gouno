@@ -15,6 +15,7 @@ var controllerCmd = &cobra.Command{
 	Use:                   "controller [name]",
 	Short:                 "Generate controller",
 	Aliases:               []string{"c"},
+	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	Run:                   runController,
 }

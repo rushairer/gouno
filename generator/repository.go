@@ -15,6 +15,7 @@ var repositoryCmd = &cobra.Command{
 	Use:                   "repository [name]",
 	Short:                 "Generate repository",
 	Aliases:               []string{"r"},
+	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	Run:                   runRepository,
 }
