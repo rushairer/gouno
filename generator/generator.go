@@ -11,8 +11,10 @@ var GeneratorCmd = &cobra.Command{
 }
 
 func init() {
-	GeneratorCmd.AddCommand(controllerCmd)
-	GeneratorCmd.AddCommand(serviceCmd)
-	GeneratorCmd.AddCommand(repositoryCmd)
-	GeneratorCmd.AddCommand(domainCmd)
+	GeneratorCmd.AddCommand(
+		controllerCmd,
+		serviceCmd,
+		repositoryCmd,
+		domainCmd,
+	)
 }
