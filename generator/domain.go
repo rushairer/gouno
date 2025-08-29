@@ -20,6 +20,13 @@ var domainCmd = &cobra.Command{
 	Run:                   runDomain,
 }
 
+var defaultDomainPath = filepath.Join("internal", "domain")
+
+func init() {
+	domainCmd.Flags().StringP("path", "p", defaultDomainPath, "path to domain")
+	domainCmd.Flags().BoolP("force", "f", false, "force overwrite")
+}
+
 func runDomain(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		fmt.Println("domain name required")
@@ -38,7 +45,11 @@ func runDomain(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to get current working directory: %v", err)
 	}
 
-	domainsDir := filepath.Join(projectRoot, "internal", "domain")
+	path := defaultDomainPath
+	if flag := cmd.Flag("path"); flag != nil {
+		path = flag.Value.String()
+	}
+	domainsDir := filepath.Join(projectRoot, path)
 	if _, innerErr := os.Stat(domainsDir); os.IsNotExist(innerErr) {
 		err = os.MkdirAll(domainsDir, 0755)
 		if err != nil {
@@ -56,6 +67,18 @@ func runDomain(cmd *cobra.Command, args []string) {
 		domainStructName,
 		domainStructName,
 	)
+
+	if force, _ := cmd.Flags().GetBool("force"); !force {
+		// Check if the file already exists, 如果存在，询问是否覆盖
+		if _, innerErr := os.Stat(domainFilePath); innerErr == nil {
+			var confirm string
+			fmt.Printf("Domain file already exists: %s, do you want to overwrite it? (y/n) ", domainFilePath)
+			fmt.Scanln(&confirm)
+			if confirm != "y" {
+				log.Fatalf("Domain file not overwritten: %s", domainFilePath)
+			}
+		}
+	}
 
 	err = os.WriteFile(domainFilePath, []byte(domainContent), 0644)
 	if err != nil {

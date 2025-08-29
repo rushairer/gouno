@@ -16,6 +16,6 @@ func init() {
 		serviceCmd,
 		repositoryCmd,
 		domainCmd,
-		suitCmd,
+		suiteCmd,
 	)
 }

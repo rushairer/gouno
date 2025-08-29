@@ -20,6 +20,13 @@ var controllerCmd = &cobra.Command{
 	Run:                   runController,
 }
 
+var defaultControllerPath = filepath.Join("controller")
+
+func init() {
+	controllerCmd.Flags().StringP("path", "p", defaultControllerPath, "path to controller")
+	controllerCmd.Flags().BoolP("force", "f", false, "force overwrite")
+}
+
 func runController(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		fmt.Println("controller name required")
@@ -38,7 +45,11 @@ func runController(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to get current working directory: %v", err)
 	}
 
-	controllersDir := filepath.Join(projectRoot, "controller")
+	path := defaultControllerPath
+	if flag := cmd.Flag("path"); flag != nil {
+		path = flag.Value.String()
+	}
+	controllersDir := filepath.Join(projectRoot, path)
 	if _, innerErr := os.Stat(controllersDir); os.IsNotExist(innerErr) {
 		err = os.MkdirAll(controllersDir, 0755)
 		if err != nil {
@@ -56,6 +67,17 @@ func runController(cmd *cobra.Command, args []string) {
 		controllerStructName,
 		controllerStructName,
 	)
+	if force, _ := cmd.Flags().GetBool("force"); !force {
+		// Check if the file already exists, 如果存在，询问是否覆盖
+		if _, innerErr := os.Stat(controllerFilePath); innerErr == nil {
+			var confirm string
+			fmt.Printf("Controller file already exists: %s, do you want to overwrite it? (y/n) ", controllerFilePath)
+			fmt.Scanln(&confirm)
+			if confirm != "y" {
+				log.Fatalf("Controller file not overwritten: %s", controllerFilePath)
+			}
+		}
+	}
 
 	err = os.WriteFile(controllerFilePath, []byte(controllerContent), 0644)
 	if err != nil {

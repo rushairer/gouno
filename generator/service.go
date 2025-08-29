@@ -20,6 +20,13 @@ var serviceCmd = &cobra.Command{
 	Run:                   runService,
 }
 
+var defaultServicePath = filepath.Join("internal", "service")
+
+func init() {
+	serviceCmd.Flags().StringP("path", "p", defaultServicePath, "path to service")
+	serviceCmd.Flags().BoolP("force", "f", false, "force overwrite")
+}
+
 func runService(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		fmt.Println("service name required")
@@ -38,7 +45,11 @@ func runService(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to get current working directory: %v", err)
 	}
 
-	servicesDir := filepath.Join(projectRoot, "internal", "service")
+	path := defaultServicePath
+	if flag := cmd.Flag("path"); flag != nil {
+		path = flag.Value.String()
+	}
+	servicesDir := filepath.Join(projectRoot, path)
 	if _, innerErr := os.Stat(servicesDir); os.IsNotExist(innerErr) {
 		err = os.MkdirAll(servicesDir, 0755)
 		if err != nil {
@@ -56,6 +67,18 @@ func runService(cmd *cobra.Command, args []string) {
 		serviceStructName,
 		serviceStructName,
 	)
+
+	if force, _ := cmd.Flags().GetBool("force"); !force {
+		// Check if the file already exists, 如果存在，询问是否覆盖
+		if _, innerErr := os.Stat(serviceFilePath); innerErr == nil {
+			var confirm string
+			fmt.Printf("Service file already exists: %s, do you want to overwrite it? (y/n) ", serviceFilePath)
+			fmt.Scanln(&confirm)
+			if confirm != "y" {
+				log.Fatalf("Service file not overwritten: %s", serviceFilePath)
+			}
+		}
+	}
 
 	err = os.WriteFile(serviceFilePath, []byte(serviceContent), 0644)
 	if err != nil {

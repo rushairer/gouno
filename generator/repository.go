@@ -20,6 +20,13 @@ var repositoryCmd = &cobra.Command{
 	Run:                   runRepository,
 }
 
+var defaultRepositoryPath = filepath.Join("internal", "repository")
+
+func init() {
+	repositoryCmd.Flags().StringP("path", "p", defaultRepositoryPath, "path to repository")
+	repositoryCmd.Flags().BoolP("force", "f", false, "force overwrite")
+}
+
 func runRepository(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
 		fmt.Println("repository name required")
@@ -38,7 +45,11 @@ func runRepository(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to get current working directory: %v", err)
 	}
 
-	repositorysDir := filepath.Join(projectRoot, "internal", "repository")
+	path := defaultRepositoryPath
+	if flag := cmd.Flag("path"); flag != nil {
+		path = flag.Value.String()
+	}
+	repositorysDir := filepath.Join(projectRoot, path)
 	if _, innerErr := os.Stat(repositorysDir); os.IsNotExist(innerErr) {
 		err = os.MkdirAll(repositorysDir, 0755)
 		if err != nil {
@@ -56,6 +67,18 @@ func runRepository(cmd *cobra.Command, args []string) {
 		repositoryStructName,
 		repositoryStructName,
 	)
+
+	if force, _ := cmd.Flags().GetBool("force"); !force {
+		// Check if the file already exists, 如果存在，询问是否覆盖
+		if _, innerErr := os.Stat(repositoryFilePath); innerErr == nil {
+			var confirm string
+			fmt.Printf("Repository file already exists: %s, do you want to overwrite it? (y/n) ", repositoryFilePath)
+			fmt.Scanln(&confirm)
+			if confirm != "y" {
+				log.Fatalf("Repository file not overwritten: %s", repositoryFilePath)
+			}
+		}
+	}
 
 	err = os.WriteFile(repositoryFilePath, []byte(repositoryContent), 0644)
 	if err != nil {
