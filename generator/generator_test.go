@@ -24,13 +24,13 @@ func executeCommandC(root *cobra.Command, args ...string) (c *cobra.Command, out
 func TestGeneratorService(t *testing.T) {
 	cmd := generator.GeneratorCmd
 
-	executeCommandC(cmd, "service", "foo")
+	executeCommandC(cmd, "service", "foo_bar")
 	// 判断是否在 ./internal/service 目录下创建了foo文件，并删除
-	serviceFilePath := filepath.Join("./internal/service", "foo.go")
+	serviceFilePath := filepath.Join("./internal/service", "foo_bar.go")
 	if _, err := os.Stat(serviceFilePath); os.IsNotExist(err) {
 		t.Errorf("Service file not created: %s", serviceFilePath)
 	}
-	executeCommandC(cmd, "service", "foo", "--force")
+	executeCommandC(cmd, "service", "foo_bar", "--force")
 	if err := os.Remove(serviceFilePath); err != nil {
 		t.Errorf("Failed to remove service file: %v", err)
 	}
@@ -46,9 +46,9 @@ func TestGeneratorService(t *testing.T) {
 		t.Errorf("Internal directory not deleted: %s", "./internal")
 	}
 
-	executeCommandC(cmd, "service", "foo", "--path", "./custom/service")
+	executeCommandC(cmd, "service", "foo_bar", "--path", "./custom/service")
 	// 判断是否在 ./custom/service 目录下创建了foo文件，并删除
-	serviceFilePath = filepath.Join("./custom/service", "foo.go")
+	serviceFilePath = filepath.Join("./custom/service", "foo_bar.go")
 	if _, err := os.Stat(serviceFilePath); os.IsNotExist(err) {
 		t.Errorf("Service file not created: %s", serviceFilePath)
 	}

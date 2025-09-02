@@ -6,9 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/rushairer/gouno/utilitiy"
 	"github.com/spf13/cobra"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 var serviceCmd = &cobra.Command{
@@ -38,7 +37,7 @@ func runService(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	serviceFileName := fmt.Sprintf("%s.go", serviceName)
-	serviceStructName := cases.Title(language.English).String(serviceName)
+	serviceStructName := utilitiy.ToCamelCase(serviceName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {

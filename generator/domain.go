@@ -6,9 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/rushairer/gouno/utilitiy"
 	"github.com/spf13/cobra"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 var domainCmd = &cobra.Command{
@@ -38,7 +37,7 @@ func runDomain(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	domainFileName := fmt.Sprintf("%s.go", domainName)
-	domainStructName := cases.Title(language.English).String(domainName)
+	domainStructName := utilitiy.ToCamelCase(domainName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {
