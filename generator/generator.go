@@ -17,5 +17,6 @@ func init() {
 		repositoryCmd,
 		domainCmd,
 		suiteCmd,
+		taskCmd,
 	)
 }

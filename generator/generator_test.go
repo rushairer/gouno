@@ -163,6 +163,53 @@ func TestGeneratorRepository(t *testing.T) {
 	}
 }
 
+func TestGeneratorTask(t *testing.T) {
+	cmd := generator.GeneratorCmd
+
+	executeCommandC(cmd, "task", "foo")
+	// 判断是否在 ./internal/task 目录下创建了foo文件，并删除
+	taskFilePath := filepath.Join("./internal/task", "foo.go")
+	if _, err := os.Stat(taskFilePath); os.IsNotExist(err) {
+		t.Errorf("Task file not created: %s", taskFilePath)
+	}
+	executeCommandC(cmd, "task", "foo", "--force")
+	if err := os.Remove(taskFilePath); err != nil {
+		t.Errorf("Failed to remove task file: %v", err)
+	}
+	if err := os.RemoveAll("./internal"); err != nil {
+		t.Errorf("Failed to remove internal directory: %v", err)
+	}
+	// 判断是否在 ./internal/task 目录下删除了foo文件
+	if _, err := os.Stat(taskFilePath); err == nil {
+		t.Errorf("Task file not deleted: %s", taskFilePath)
+	}
+	// 判断是否在当前目录下删除了internal目录
+	if _, err := os.Stat("./internal"); err == nil {
+		t.Errorf("Internal directory not deleted: %s", "./internal")
+	}
+
+	executeCommandC(cmd, "task", "foo", "--path", "./custom/task")
+	// 判断是否在 ./custom/task 目录下创建了foo文件，并删除
+	taskFilePath = filepath.Join("./custom/task", "foo.go")
+	if _, err := os.Stat(taskFilePath); os.IsNotExist(err) {
+		t.Errorf("Task file not created: %s", taskFilePath)
+	}
+	if err := os.Remove(taskFilePath); err != nil {
+		t.Errorf("Failed to remove task file: %v", err)
+	}
+	if err := os.RemoveAll("./custom"); err != nil {
+		t.Errorf("Failed to remove custom directory: %v", err)
+	}
+	// 判断是否在 ./custom/task 目录下删除了foo文件
+	if _, err := os.Stat(taskFilePath); err == nil {
+		t.Errorf("Task file not deleted: %s", taskFilePath)
+	}
+	// 判断是否在当前目录下删除了custom目录
+	if _, err := os.Stat("./custom"); err == nil {
+		t.Errorf("Custom directory not deleted: %s", "./custom")
+	}
+}
+
 func TestGeneratorController(t *testing.T) {
 	cmd := generator.GeneratorCmd
 
