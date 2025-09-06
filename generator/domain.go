@@ -97,6 +97,6 @@ func New%s() *%s {
 	return &%s{}
 }
 
-func (c *%s) Get(ctx context.Context) (result string, err error) {
+func (c *%s) Foo(ctx context.Context) (bar string, err error) {
 	return
 }`

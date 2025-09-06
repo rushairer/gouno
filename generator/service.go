@@ -97,6 +97,6 @@ func New%sService() *%sService {
 	return &%sService{}
 }
 
-func (c *%sService) Get(ctx context.Context) (result string, err error) {
+func (c *%sService) Foo(ctx context.Context) (bar string, err error) {
 	return
 }`

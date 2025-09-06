@@ -100,6 +100,6 @@ func New%sController() *%sController {
 	return &%sController{}
 }
 
-func (c *%sController) Get(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gouno.NewSuccessResponse("foo"))
+func (c *%sController) Foo(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gouno.NewSuccessResponse("bar"))
 }`
