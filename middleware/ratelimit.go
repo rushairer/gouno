@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -163,11 +164,11 @@ func RateLimitMiddleware(limit int, window time.Duration) gin.HandlerFunc {
 		if !limiter.IsAllowed(ip) {
 			resetTime := limiter.GetResetTime(ip)
 
-			// 设置响应头
-			c.Header("X-RateLimit-Limit", "60")
+			// 设置响应头 - 修复空字节问题
+			c.Header("X-RateLimit-Limit", strconv.Itoa(limit))
 			c.Header("X-RateLimit-Remaining", "0")
 			c.Header("X-RateLimit-Reset", resetTime.Format(time.RFC3339))
-			c.Header("Retry-After", "60")
+			c.Header("Retry-After", strconv.Itoa(int(window.Seconds())))
 
 			c.JSON(http.StatusTooManyRequests, gin.H{
 				"error":    "Rate limit exceeded",
@@ -184,9 +185,14 @@ func RateLimitMiddleware(limit int, window time.Duration) gin.HandlerFunc {
 		remaining := limiter.GetRemainingRequests(ip)
 		resetTime := limiter.GetResetTime(ip)
 
-		c.Header("X-RateLimit-Limit", "60")
-		c.Header("X-RateLimit-Remaining", string(rune(remaining)))
-		c.Header("X-RateLimit-Reset", resetTime.Format(time.RFC3339))
+		// 确保所有头部值都是有效的字符串，避免空字节
+		limitStr := strconv.Itoa(limit)
+		remainingStr := strconv.Itoa(remaining)
+		resetStr := resetTime.Format(time.RFC3339)
+
+		c.Header("X-RateLimit-Limit", limitStr)
+		c.Header("X-RateLimit-Remaining", remainingStr)
+		c.Header("X-RateLimit-Reset", resetStr)
 
 		c.Next()
 	}
