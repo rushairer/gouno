@@ -4,7 +4,7 @@ go 1.23.3
 
 require (
 	github.com/gin-gonic/gin v1.11.0
-	github.com/rushairer/go-pipeline v1.0.0
+	github.com/rushairer/go-pipeline/v2 v2.2.2
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/text v0.27.0
