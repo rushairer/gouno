@@ -97,6 +97,6 @@ func New%sTask() *%sTask {
 	return &%sTask{}
 }
 
-func (c *%sTask) Run(ctx context.Context) error {
+func (t *%sTask) Run(ctx context.Context) error {
 	return nil
 }`

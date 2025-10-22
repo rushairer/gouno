@@ -97,6 +97,6 @@ func New%sRepository() *%sRepository {
 	return &%sRepository{}
 }
 
-func (c *%sRepository) Foo(ctx context.Context) (bar string, err error) {
+func (r *%sRepository) Foo(ctx context.Context) (bar string, err error) {
 	return
 }`
