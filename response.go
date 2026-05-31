@@ -29,7 +29,7 @@ func NewResponse(code int, message string, data any) *Response {
 }
 
 func NewSuccessResponse(data any) *Response {
-	return NewResponse(0, "success", data)
+	return NewResponse(http.StatusOK, "success", data)
 }
 
 func NewErrorResponse(code int, message string) *Response {
