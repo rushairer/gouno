@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rushairer/gouno"
 )
 
 // RateLimiter IP 限频器
@@ -175,13 +176,7 @@ func RateLimitMiddleware(ctx context.Context, limit int, window time.Duration) g
 			c.Header("X-RateLimit-Reset", resetTime.Format(time.RFC3339))
 			c.Header("Retry-After", strconv.Itoa(int(window.Seconds())))
 
-			c.JSON(http.StatusTooManyRequests, gin.H{
-				"error":    "Rate limit exceeded",
-				"message":  "Too many requests. Please try again later.",
-				"limit":    limit,
-				"window":   window.String(),
-				"reset_at": resetTime.Format(time.RFC3339),
-			})
+			c.JSON(http.StatusTooManyRequests, gouno.NewErrorResponse(http.StatusTooManyRequests, "too many requests"))
 			c.Abort()
 			return
 		}
