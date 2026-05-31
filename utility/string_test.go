@@ -14,13 +14,17 @@ func TestToCamelCase(t *testing.T) {
 		{"hello_world", "HelloWorld"},
 		{"foo_bar", "FooBar"},
 		{"snake_case", "SnakeCase"},
+		{"simple", "Simple"},
+		{"a", "A"},
 	}
 
-	for _, test := range tests {
-		result := utility.ToCamelCase(test.input)
-		if result != test.expected {
-			t.Errorf("ToCamelCase(%s) = %s; want %s", test.input, result, test.expected)
-		}
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := utility.ToCamelCase(tt.input)
+			if result != tt.expected {
+				t.Errorf("ToCamelCase(%s) = %s; want %s", tt.input, result, tt.expected)
+			}
+		})
 	}
 }
 
@@ -33,12 +37,15 @@ func TestToSnakeCase(t *testing.T) {
 		{"FooBar", "foo_bar"},
 		{"SnakeCase", "snake_case"},
 		{"123ABC", "123_abc"},
+		{"Simple", "simple"},
 	}
 
-	for _, test := range tests {
-		result := utility.ToSnakeCase(test.input)
-		if result != test.expected {
-			t.Errorf("ToSnakeCase(%s) = %s; want %s", test.input, result, test.expected)
-		}
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			result := utility.ToSnakeCase(tt.input)
+			if result != tt.expected {
+				t.Errorf("ToSnakeCase(%s) = %s; want %s", tt.input, result, tt.expected)
+			}
+		})
 	}
 }
