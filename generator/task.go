@@ -6,14 +6,14 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rushairer/gouno/utilitiy"
+	"github.com/rushairer/gouno/utility"
 	"github.com/spf13/cobra"
 )
 
 var taskCmd = &cobra.Command{
 	Use:                   "task [name]",
 	Short:                 "Generate task",
-	Aliases:               []string{"r"},
+	Aliases:               []string{"t"},
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	Run:                   runTask,
@@ -37,7 +37,7 @@ func runTask(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	taskFileName := fmt.Sprintf("%s.go", taskName)
-	taskStructName := utilitiy.ToCamelCase(taskName)
+	taskStructName := utility.ToCamelCase(taskName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {

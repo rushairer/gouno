@@ -1,9 +1,9 @@
-package utilitiy_test
+package utility_test
 
 import (
 	"testing"
 
-	"github.com/rushairer/gouno/utilitiy"
+	"github.com/rushairer/gouno/utility"
 )
 
 func TestToCamelCase(t *testing.T) {
@@ -17,7 +17,7 @@ func TestToCamelCase(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := utilitiy.ToCamelCase(test.input)
+		result := utility.ToCamelCase(test.input)
 		if result != test.expected {
 			t.Errorf("ToCamelCase(%s) = %s; want %s", test.input, result, test.expected)
 		}
@@ -36,7 +36,7 @@ func TestToSnakeCase(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		result := utilitiy.ToSnakeCase(test.input)
+		result := utility.ToSnakeCase(test.input)
 		if result != test.expected {
 			t.Errorf("ToSnakeCase(%s) = %s; want %s", test.input, result, test.expected)
 		}

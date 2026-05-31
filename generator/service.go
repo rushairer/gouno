@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rushairer/gouno/utilitiy"
+	"github.com/rushairer/gouno/utility"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func runService(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	serviceFileName := fmt.Sprintf("%s.go", serviceName)
-	serviceStructName := utilitiy.ToCamelCase(serviceName)
+	serviceStructName := utility.ToCamelCase(serviceName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {

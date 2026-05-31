@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rushairer/gouno/utilitiy"
+	"github.com/rushairer/gouno/utility"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func runRepository(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	repositoryFileName := fmt.Sprintf("%s.go", repositoryName)
-	repositoryStructName := utilitiy.ToCamelCase(repositoryName)
+	repositoryStructName := utility.ToCamelCase(repositoryName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {

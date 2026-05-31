@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rushairer/gouno/utilitiy"
+	"github.com/rushairer/gouno/utility"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func runDomain(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	domainFileName := fmt.Sprintf("%s.go", domainName)
-	domainStructName := utilitiy.ToCamelCase(domainName)
+	domainStructName := utility.ToCamelCase(domainName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rushairer/gouno/utilitiy"
+	"github.com/rushairer/gouno/utility"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +37,7 @@ func runController(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	controllerFileName := fmt.Sprintf("%s.go", controllerName)
-	controllerStructName := utilitiy.ToCamelCase(controllerName)
+	controllerStructName := utility.ToCamelCase(controllerName)
 
 	projectRoot, err := os.Getwd()
 	if err != nil {

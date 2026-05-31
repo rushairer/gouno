@@ -1,13 +1,14 @@
-package utilitiy
+package utility
 
 import (
-	"log"
 	"regexp"
 	"strings"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
+
+var camelCaseRegex = regexp.MustCompile("([a-z0-9])([A-Z])")
 
 func ToCamelCase(s string) string {
 	parts := strings.Split(s, "_")
@@ -18,8 +19,6 @@ func ToCamelCase(s string) string {
 }
 
 func ToSnakeCase(s string) string {
-	re := regexp.MustCompile("([a-z0-9])([A-Z])")
-	s = re.ReplaceAllString(s, "${1}_${2}")
-	log.Println(re.ReplaceAllString(s, "${1}_${2}"))
+	s = camelCaseRegex.ReplaceAllString(s, "${1}_${2}")
 	return strings.ToLower(s)
 }
