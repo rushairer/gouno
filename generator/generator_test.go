@@ -18,9 +18,12 @@ func executeCommandC(root *cobra.Command, args ...string) (c *cobra.Command, out
 	root.SetArgs(args)
 	c, err = root.ExecuteC()
 
-	// 重置所有子命令的 --path 标志到默认值，防止跨测试状态污染
+	// 重置所有子命令的标志到默认值，防止跨测试状态污染
 	for _, subCmd := range root.Commands() {
 		if f := subCmd.Flag("path"); f != nil {
+			f.Value.Set(f.DefValue)
+		}
+		if f := subCmd.Flag("force"); f != nil {
 			f.Value.Set(f.DefValue)
 		}
 	}
@@ -309,6 +312,50 @@ func TestGeneratorCamelCaseConversion(t *testing.T) {
 			filePath := filepath.Join(tmpDir, "internal", "service", tt.input+".go")
 			assertFileContains(t, filePath, tt.expected)
 		})
+	}
+}
+
+func TestGeneratorSkipExisting(t *testing.T) {
+	tmpDir := chdir(t)
+	filePath := filepath.Join(tmpDir, "internal", "service", "foo.go")
+
+	// 第一次创建文件
+	_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo")
+	if err != nil {
+		t.Fatalf("command failed: %v", err)
+	}
+	assertFileExists(t, filePath)
+
+	// 记录文件修改时间
+	info1, err := os.Stat(filePath)
+	if err != nil {
+		t.Fatalf("failed to stat file: %v", err)
+	}
+
+	// 再次执行相同命令（不带 --force），文件应被跳过且内容不变
+	_, _, err = executeCommandC(generator.GeneratorCmd, "service", "foo")
+	if err != nil {
+		t.Fatalf("command failed: %v", err)
+	}
+	info2, err := os.Stat(filePath)
+	if err != nil {
+		t.Fatalf("failed to stat file: %v", err)
+	}
+	if info1.ModTime() != info2.ModTime() {
+		t.Errorf("file should not be modified when skipped (modtime changed)")
+	}
+
+	// 带 --force 应覆盖
+	_, _, err = executeCommandC(generator.GeneratorCmd, "service", "foo", "--force")
+	if err != nil {
+		t.Fatalf("command failed: %v", err)
+	}
+	info3, err := os.Stat(filePath)
+	if err != nil {
+		t.Fatalf("failed to stat file: %v", err)
+	}
+	if info2.ModTime() == info3.ModTime() {
+		t.Errorf("file should be modified with --force (modtime unchanged)")
 	}
 }
 

@@ -12,7 +12,7 @@ import (
 // generateFile 是所有代码生成器的公共逻辑：
 // 1. 将名称转为驼峰命名
 // 2. 在目标目录下创建文件
-// 3. 若文件已存在且未指定 --force，提示用户确认覆盖
+// 3. 若文件已存在且未指定 --force，跳过并提示
 func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath, tmpl string) error {
 	name := args[0]
 	structName := utility.ToCamelCase(name)
@@ -37,13 +37,8 @@ func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath, tmpl
 	filePath := filepath.Join(dir, fmt.Sprintf("%s.go", name))
 	if force, _ := cmd.Flags().GetBool("force"); !force {
 		if _, err := os.Stat(filePath); err == nil {
-			var confirm string
-			displayName := string(typeName[0]-32) + typeName[1:]
-			fmt.Printf("%s file already exists: %s, do you want to overwrite it? (y/n) ", displayName, filePath)
-			fmt.Scanln(&confirm)
-			if confirm != "y" {
-				return fmt.Errorf("%s file not overwritten: %s", typeName, filePath)
-			}
+			cmd.Printf("%s file already exists, skipping: %s (use --force to overwrite)\n", typeName, filePath)
+			return nil
 		}
 	}
 
