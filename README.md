@@ -1,14 +1,10 @@
 # gouno
 
-[English](#english) | [中文](#中文)
+[中文](./README.zh-CN.md)
 
 ---
 
-## English
-
-### What is gouno?
-
-gouno is a **lightweight Go web project launcher**. It scaffolds the project structure, startup flow, web layer, and response format — the boilerplate you'd rewrite for every microservice — so you can focus on business logic from the first line.
+A **lightweight Go web project launcher**. Scaffolds project structure, startup flow, web layer, and response format — the boilerplate you'd rewrite for every microservice — so you can focus on business logic from the first line.
 
 gouno is **not a framework**. It doesn't bundle a database driver, cache client, or message queue. Your tech stack is your choice. gouno handles the rest.
 
@@ -21,7 +17,7 @@ What gouno does                    What gouno doesn't do
 └── Code generator + templates
 ```
 
-### Quick Start
+## Quick Start
 
 ```bash
 # Install gouno-cli
@@ -39,7 +35,7 @@ make dev
 
 Your service is running. From here, write business code.
 
-### Code Generation
+## Code Generation
 
 Generate a complete DDD module (domain + repository + service) in one command:
 
@@ -64,9 +60,28 @@ gouno gen controller order
 gouno gen task send_email
 ```
 
-### Template Sets
+Aliases for faster typing:
+
+```bash
+gouno gen d order   # domain
+gouno gen r order   # repository
+gouno gen s order   # service
+gouno gen c order   # controller
+gouno gen t order   # task
+```
+
+Options:
+
+```bash
+gouno gen suite user --force          # Overwrite existing files
+gouno gen suite user --path ./custom  # Custom output directory
+```
+
+## Template Sets
 
 Different teams, different code styles. Template sets let you customize what `gouno gen` produces — without touching gouno's source code.
+
+### Install and Use
 
 ```bash
 # Install a community or company template set
@@ -80,30 +95,34 @@ cd order-service
 gouno gen suite user   # → generates gorm-style domain/repository/service
 ```
 
-Manage template sets:
+### Manage Template Sets
 
 ```bash
-gouno-cli template list              # List installed sets
-gouno-cli template install <n> <url> # Install from git or local path
-gouno-cli template remove <n>        # Remove a set
+gouno-cli template list                        # List installed sets
+gouno-cli template install <name> <git-url>    # Install from git
+gouno-cli template install <name> <local-path> # Install from local directory
+gouno-cli template remove <name>               # Remove a set
+gouno-cli template install <name> <url> --force # Overwrite existing
 ```
 
-**How it works:**
+### How Template Search Works
 
 ```
 Search priority:
-1. --template-set flag (highest)
-2. .gouno.yaml in project root
-3. Built-in default templates
+1. --template-set flag (command level)
+2. .gouno.yaml in project root (project level)
+3. Built-in default templates (fallback)
 
-Template locations:
+Installed location:
 ~/.gouno/templates/
 ├── default/      ← Ships with gouno-template
-├── gorm/         ← Your custom set
-└── my-company/   ← Your company set
+├── gorm/         ← Custom set
+└── my-company/   ← Company set
 ```
 
-Create your own template set — just a directory with `.tmpl` files:
+### Create Your Own Template Set
+
+A template set is a directory with `.tmpl` files:
 
 ```
 my-template-set/
@@ -114,9 +133,9 @@ my-template-set/
 └── task.tmpl
 ```
 
-Each `.tmpl` file uses `%s` as the struct name placeholder:
+Each `.tmpl` file uses `%s` as the struct name placeholder (5 occurrences):
 
-```
+```go
 package domain
 
 import "time"
@@ -125,45 +144,59 @@ type %s struct {
     ID        uint      `json:"id" gorm:"primaryKey"`
     Name      string    `json:"name" gorm:"size:255"`
     CreatedAt time.Time `json:"created_at"`
+    UpdatedAt time.Time `json:"updated_at"`
+}
+
+func New%s() *%s {
+    return &%s{}
 }
 ```
 
-### Project Structure
+Distribute your template set as a git repository. Others install it with one command:
+
+```bash
+gouno-cli template install my-set https://github.com/myorg/my-template-set
+```
+
+## Project Structure
 
 ```
 my-service/
-├── cmd/main.go                      ← Entry point
+├── cmd/
+│   ├── main.go              ← Entry point
 │   └── gouno/
-│       ├── root.go                  ← Cobra root command
-│       └── web.go                   ← Web server (Gin + middleware + graceful shutdown)
-├── config/                          ← Multi-environment YAML config
-│   ├── development.yaml
-│   ├── test.yaml
-│   ├── production.yaml
-│   ├── config.go                    ← Config struct definitions
-│   └── config_manager.go            ← Thread-safe config loader
-├── controller/                      ← HTTP handlers (generated)
-├── internal/                        ← Business modules (DDD)
-│   ├── domain/                      ← Entities
-│   ├── repository/                  ← Data access
-│   ├── service/                     ← Business logic
-│   └── task/                        ← Background tasks
-├── middleware/                      ← Custom middleware
-├── router/                          ← Route registration
-├── .gouno.yaml                      ← Template set config (optional)
-├── Makefile                         ← Build/run/dev shortcuts
+│       ├── root.go          ← Cobra root command
+│       └── web.go           ← Web server startup
+├── config/
+│   ├── development.yaml     ← Dev config
+│   ├── test.yaml            ← Test config
+│   ├── production.yaml      ← Production config (env vars for secrets)
+│   ├── config.go            ← Config struct definitions
+│   └── config_manager.go    ← Thread-safe config loader
+├── controller/              ← HTTP handlers
+├── internal/
+│   ├── domain/              ← Entities
+│   ├── repository/          ← Data access interfaces
+│   ├── service/             ← Business logic
+│   └── task/                ← Background tasks
+├── middleware/              ← Custom middleware
+├── router/                  ← Route registration
+├── utility/                 ← Shared utilities
+├── .gouno.yaml              ← Template set config (optional)
+├── Makefile                 ← Build/run/dev shortcuts
+├── .air.toml                ← Hot-reload config
 └── go.mod
 ```
 
-### API Response Format
+## API Response Format
 
-All responses follow a unified JSON structure:
+All responses use a unified JSON structure. The `code` field matches the HTTP status code:
 
 ```json
 // Success (HTTP 200)
 {"code": 200, "message": "success", "data": {...}}
 
-// Error (HTTP 4xx/5xx)
+// Error (HTTP 400/401/403/404/408/429/500)
 {"code": 400, "message": "bad request", "data": null}
 {"code": 404, "message": "not found", "data": null}
 {"code": 500, "message": "internal server error", "data": null}
@@ -172,20 +205,28 @@ All responses follow a unified JSON structure:
 Usage in handlers:
 
 ```go
+// Success
 ctx.JSON(http.StatusOK, gouno.NewSuccessResponse(data))
+
+// Error (pre-defined)
 ctx.JSON(http.StatusBadRequest, gouno.BadRequestResponse)
+ctx.JSON(http.StatusNotFound, gouno.NotFoundResponse)
+ctx.JSON(http.StatusInternalServerError, gouno.InternalServerErrorResponse)
+
+// Error (custom message)
+ctx.JSON(http.StatusBadRequest, gouno.NewErrorResponse(http.StatusBadRequest, "email already exists"))
 ```
 
-### Middleware
+## Middleware
 
-Built-in middleware chain (in order):
+Built-in middleware chain (applied in order):
 
-| Middleware | Purpose | HTTP Status |
-|------------|---------|-------------|
-| Logger | Request logging | — |
+| Middleware | Purpose | HTTP Status on Error |
+|------------|---------|---------------------|
+| Logger | Request/response logging | — |
 | Recovery | Panic recovery | 500 |
 | Timeout | Request timeout | 408 |
-| RateLimit | IP-based rate limiting | 429 |
+| RateLimit | IP-based sliding window rate limiting | 429 |
 
 Add your own middleware in `web.go`:
 
@@ -199,85 +240,69 @@ engine.Use(
 )
 ```
 
-### Philosophy
+## Configuration
+
+Multi-environment YAML config with Viper. Environment variables override via `GOUNO_` prefix:
+
+```yaml
+web_server:
+    address: 0.0.0.0
+    port: 8080
+    request_timeout: 10s
+    rate_limit_per_minute: 120
+```
+
+```bash
+# Override port via env var
+GOUNO_WEB_SERVER_PORT=3000 ./bin/my-service web
+```
+
+CLI flags override both config files and env vars:
+
+```bash
+./bin/my-service web -p 3000 -a 127.0.0.1 -e development
+```
+
+## CLI Commands
+
+```bash
+my-service web                          # Start web server
+my-service web -e development           # Use development config
+my-service web -p 3000 -a 127.0.0.1     # Custom port and address
+my-service gen suite user               # Generate DDD module
+my-service gen task send_email          # Generate task
+my-service migrate up                   # Run database migrations
+my-service migrate down 1               # Rollback 1 migration
+my-service migrate status               # Show migration status
+```
+
+## Philosophy
 
 **gouno is a launcher, not a framework.**
 
-- **Launcher**: Handles startup boilerplate. You own the code. Modify anything.
-- **Framework**: Abstracts away details. You follow its rules. Hard to deviate.
+| | Launcher (gouno) | Framework |
+|--|--|--|
+| **Role** | Handles startup boilerplate | Abstracts away details |
+| **Ownership** | You own the code, modify anything | You follow its rules |
+| **Tech stack** | Your choice | Framework's choice |
+| **Extension** | Template sets | Plugins/modules |
 
 gouno gives you a standardized starting point, then gets out of the way. The real customization happens in **template sets** — your team's code style, your tech stack choices, your patterns — all captured as reusable templates.
 
 ```
-gouno (core)          → Handles: project structure + startup + web layer + response
-template sets         → Handles: code style + tech stack + team conventions
-your business code    → Handles: actual product logic
+gouno (core)          → Standardizes: project structure + startup + web layer + response
+template sets         → Customizes: code style + tech stack + team conventions
+your business code    → Implements: actual product logic
 ```
 
----
+## Related Projects
 
-## 中文
+| Project | Description |
+|---------|-------------|
+| [gouno](https://github.com/rushairer/gouno) | Core library (this repo) |
+| [gouno-cli](https://github.com/rushairer/gouno-cli) | CLI tool for creating projects and managing templates |
+| [gouno-template](https://github.com/rushairer/gouno-template) | Default template set and project template |
 
-### gouno 是什么？
+## License
 
-gouno 是一个**轻量级 Go Web 项目启动器**。它为你搭建项目结构、启动流程、Web 层和响应格式——这些每个微服务都要写、但跟业务无关的代码——让你从第一行就专注业务逻辑。
-
-gouno **不是框架**。它不绑定数据库驱动、缓存客户端或消息队列。技术选型由你决定，gouno 只负责其余部分。
-
-### 快速开始
-
-```bash
-# 安装 gouno-cli
-go install github.com/rushairer/gouno-cli@latest
-
-# 创建新项目
-gouno-cli new my-service -m github.com/you/my-service
-
-# 构建运行
-cd my-service
-go mod tidy
-make dev
-# → http://localhost:8080
-```
-
-### 代码生成
-
-一条命令生成完整的 DDD 模块（domain + repository + service）：
-
-```bash
-gouno gen suite user
-```
-
-也支持单独生成：
-
-```bash
-gouno gen domain order
-gouno gen controller auth
-gouno gen task send_email
-```
-
-### 模板集
-
-不同团队、不同代码风格。模板集让你自定义 `gouno gen` 的输出，无需修改 gouno 源码：
-
-```bash
-# 安装模板集
-gouno-cli template install gorm https://github.com/myorg/gouno-template-gorm
-
-# 创建项目时指定模板集
-gouno-cli new order-service --template-set gorm -m github.com/myorg/order-service
-
-# gen suite 自动使用 gorm 模板
-cd order-service
-gouno gen suite user
-```
-
-创建自定义模板集：只需一个包含 `.tmpl` 文件的目录，`%s` 作为结构体名占位符。
-
-### 设计理念
-
-**gouno 是启动器，不是框架。**
-
-gouno 处理项目启动的标准化工作，然后让开。真正的定制通过**模板集**完成——你的代码风格、技术选型、团队规范——全部封装为可复用的模板。
-
-gouno 负责启动标准化，模板集负责代码风格，你负责业务逻辑。
+MIT License. See [LICENSE](LICENSE) for details.
