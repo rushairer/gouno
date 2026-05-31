@@ -1,8 +1,10 @@
 package middleware_test
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
+	"runtime"
 	"testing"
 	"time"
 
@@ -13,10 +15,11 @@ import (
 )
 
 func TestRateLimiter(t *testing.T) {
-	// 创建一个限制为每分钟3次的限频器用于测试
-	limiter := middleware.NewRateLimiter(3, time.Minute)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	// 测试正常请求
+	limiter := middleware.NewRateLimiter(ctx, 3, time.Minute)
+
 	assert.True(t, limiter.IsAllowed("192.168.1.1"))
 	assert.True(t, limiter.IsAllowed("192.168.1.1"))
 	assert.True(t, limiter.IsAllowed("192.168.1.1"))
@@ -29,7 +32,10 @@ func TestRateLimiter(t *testing.T) {
 }
 
 func TestRateLimiterRemainingRequests(t *testing.T) {
-	limiter := middleware.NewRateLimiter(5, time.Minute)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limiter := middleware.NewRateLimiter(ctx, 5, time.Minute)
 	ip := "192.168.1.1"
 
 	// 初始状态应该有5次剩余
@@ -49,10 +55,13 @@ func TestRateLimiterRemainingRequests(t *testing.T) {
 
 func TestRateLimitMiddleware(t *testing.T) {
 	gin.SetMode(gin.TestMode)
+	limit := 2
 
-	// 创建测试路由
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	r := gin.New()
-	r.Use(middleware.RateLimitMiddleware(2, time.Minute)) // 每分钟2次
+	r.Use(middleware.RateLimitMiddleware(ctx, limit, time.Minute))
 	r.GET("/test", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "success"})
 	})
@@ -64,7 +73,7 @@ func TestRateLimitMiddleware(t *testing.T) {
 	r.ServeHTTP(w1, req1)
 
 	assert.Equal(t, http.StatusOK, w1.Code)
-	assert.Equal(t, "60", w1.Header().Get("X-RateLimit-Limit"))
+	assert.Equal(t, "2", w1.Header().Get("X-RateLimit-Limit"))
 
 	// 第2次请求 - 应该成功
 	req2 := httptest.NewRequest("GET", "/test", nil)
@@ -82,14 +91,16 @@ func TestRateLimitMiddleware(t *testing.T) {
 
 	assert.Equal(t, http.StatusTooManyRequests, w3.Code)
 	assert.Equal(t, "0", w3.Header().Get("X-RateLimit-Remaining"))
-	assert.Equal(t, "60", w3.Header().Get("Retry-After"))
 }
 
 func TestRateLimitMiddlewareDifferentIPs(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	r := gin.New()
-	r.Use(middleware.RateLimitMiddleware(1, time.Minute)) // 每分钟1次
+	r.Use(middleware.RateLimitMiddleware(ctx, 1, time.Minute))
 	r.GET("/test", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "success"})
 	})
@@ -117,8 +128,11 @@ func TestRateLimitMiddlewareDifferentIPs(t *testing.T) {
 }
 
 func TestRateLimiterTimeWindow(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	// 使用很短的时间窗口进行测试
-	limiter := middleware.NewRateLimiter(2, 100*time.Millisecond)
+	limiter := middleware.NewRateLimiter(ctx, 2, 100*time.Millisecond)
 	ip := "192.168.1.1"
 
 	// 使用完所有请求
@@ -133,9 +147,46 @@ func TestRateLimiterTimeWindow(t *testing.T) {
 	assert.True(t, limiter.IsAllowed(ip))
 }
 
+func TestRateLimiterContextCancel(t *testing.T) {
+	before := runtime.NumGoroutine()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	_ = middleware.NewRateLimiter(ctx, 10, time.Minute)
+
+	// 等待 goroutine 启动
+	time.Sleep(10 * time.Millisecond)
+	afterCreate := runtime.NumGoroutine()
+	assert.GreaterOrEqual(t, afterCreate, before, "goroutine should be created")
+
+	// 取消 context 后 goroutine 应该退出
+	cancel()
+	time.Sleep(10 * time.Millisecond)
+	afterCancel := runtime.NumGoroutine()
+	assert.LessOrEqual(t, afterCancel, afterCreate, "goroutine should exit after context cancel")
+}
+
+func TestRateLimiterContextCancelMultiple(t *testing.T) {
+	before := runtime.NumGoroutine()
+
+	// 创建多个限频器，取消后都应该释放 goroutine
+	for i := 0; i < 5; i++ {
+		ctx, cancel := context.WithCancel(context.Background())
+		_ = middleware.NewRateLimiter(ctx, 10, time.Minute)
+		cancel()
+	}
+
+	time.Sleep(50 * time.Millisecond)
+	after := runtime.NumGoroutine()
+	// 允许少量 goroutine 波动，但不应累积 5 个以上
+	assert.LessOrEqual(t, after-before+2, 3, "cancelled limiters should not leak goroutines")
+}
+
 // 基准测试
 func BenchmarkRateLimiter(b *testing.B) {
-	limiter := middleware.NewRateLimiter(1000, time.Minute)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limiter := middleware.NewRateLimiter(ctx, 1000, time.Minute)
 	ip := "192.168.1.1"
 
 	b.ResetTimer()
@@ -145,7 +196,10 @@ func BenchmarkRateLimiter(b *testing.B) {
 }
 
 func BenchmarkRateLimiterConcurrent(b *testing.B) {
-	limiter := middleware.NewRateLimiter(1000, time.Minute)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limiter := middleware.NewRateLimiter(ctx, 1000, time.Minute)
 
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {

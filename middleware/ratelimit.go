@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 	"sync"
@@ -23,16 +24,15 @@ type Visitor struct {
 	mu       sync.Mutex
 }
 
-// NewRateLimiter 创建新的限频器
-func NewRateLimiter(limit int, window time.Duration) *RateLimiter {
+// NewRateLimiter 创建新的限频器，ctx 取消时停止后台清理 goroutine
+func NewRateLimiter(ctx context.Context, limit int, window time.Duration) *RateLimiter {
 	rl := &RateLimiter{
 		visitors: make(map[string]*Visitor),
 		limit:    limit,
 		window:   window,
 	}
 
-	// 启动清理 goroutine，定期清理过期的访问者
-	go rl.cleanupVisitors()
+	go rl.cleanupVisitors(ctx)
 
 	return rl
 }
@@ -74,25 +74,30 @@ func (rl *RateLimiter) IsAllowed(ip string) bool {
 	return true
 }
 
-// cleanupVisitors 定期清理过期的访问者
-func (rl *RateLimiter) cleanupVisitors() {
-	ticker := time.NewTicker(5 * time.Minute) // 每5分钟清理一次
+// cleanupVisitors 定期清理过期的访问者，ctx 取消时退出
+func (rl *RateLimiter) cleanupVisitors(ctx context.Context) {
+	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
 
-	for range ticker.C {
-		rl.mu.Lock()
-		now := time.Now()
-		cutoff := now.Add(-rl.window * 2) // 保留2倍窗口时间的数据
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			rl.mu.Lock()
+			now := time.Now()
+			cutoff := now.Add(-rl.window * 2) // 保留2倍窗口时间的数据
 
-		for ip, visitor := range rl.visitors {
-			visitor.mu.Lock()
-			// 如果访问者在2倍窗口时间内没有请求，则删除
-			if len(visitor.requests) == 0 || visitor.requests[len(visitor.requests)-1].Before(cutoff) {
-				delete(rl.visitors, ip)
+			for ip, visitor := range rl.visitors {
+				visitor.mu.Lock()
+				// 如果访问者在2倍窗口时间内没有请求，则删除
+				if len(visitor.requests) == 0 || visitor.requests[len(visitor.requests)-1].Before(cutoff) {
+					delete(rl.visitors, ip)
+				}
+				visitor.mu.Unlock()
 			}
-			visitor.mu.Unlock()
+			rl.mu.Unlock()
 		}
-		rl.mu.Unlock()
 	}
 }
 
@@ -154,8 +159,8 @@ func (rl *RateLimiter) GetResetTime(ip string) time.Time {
 }
 
 // RateLimitMiddleware 创建限频中间件
-func RateLimitMiddleware(limit int, window time.Duration) gin.HandlerFunc {
-	limiter := NewRateLimiter(limit, window)
+func RateLimitMiddleware(ctx context.Context, limit int, window time.Duration) gin.HandlerFunc {
+	limiter := NewRateLimiter(ctx, limit, window)
 
 	return func(c *gin.Context) {
 		ip := c.ClientIP()
@@ -164,7 +169,7 @@ func RateLimitMiddleware(limit int, window time.Duration) gin.HandlerFunc {
 		if !limiter.IsAllowed(ip) {
 			resetTime := limiter.GetResetTime(ip)
 
-			// 设置响应头 - 修复空字节问题
+			// 设置响应头
 			c.Header("X-RateLimit-Limit", strconv.Itoa(limit))
 			c.Header("X-RateLimit-Remaining", "0")
 			c.Header("X-RateLimit-Reset", resetTime.Format(time.RFC3339))
@@ -199,6 +204,6 @@ func RateLimitMiddleware(limit int, window time.Duration) gin.HandlerFunc {
 }
 
 // IPRateLimitMiddleware 默认的 IP 限频中间件 (每分钟60次)
-func IPRateLimitMiddleware() gin.HandlerFunc {
-	return RateLimitMiddleware(60, time.Minute)
+func IPRateLimitMiddleware(ctx context.Context) gin.HandlerFunc {
+	return RateLimitMiddleware(ctx, 60, time.Minute)
 }
