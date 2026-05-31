@@ -8,9 +8,9 @@ var suiteCmd = &cobra.Command{
 	DisableFlagsInUseLine: true,
 	Args:                  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		runDomain(cmd, args)
-		runRepository(cmd, args)
-		runService(cmd, args)
+		generateFile(cmd, args, "domain", defaultDomainPath, domainTemplate)
+		generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate)
+		generateFile(cmd, args, "service", defaultServicePath, serviceTemplate)
 	},
 }
 

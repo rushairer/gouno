@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/rushairer/gouno/generator"
@@ -15,283 +16,316 @@ func executeCommandC(root *cobra.Command, args ...string) (c *cobra.Command, out
 	root.SetOut(buf)
 	root.SetErr(buf)
 	root.SetArgs(args)
-
 	c, err = root.ExecuteC()
+
+	// 重置所有子命令的 --path 标志到默认值，防止跨测试状态污染
+	for _, subCmd := range root.Commands() {
+		if f := subCmd.Flag("path"); f != nil {
+			f.Value.Set(f.DefValue)
+		}
+	}
 
 	return c, buf.String(), err
 }
 
+// chdir 切换到临时目录作为工作目录，测试结束后自动还原并清理
+func chdir(t *testing.T) string {
+	t.Helper()
+	tmpDir, err := filepath.Abs(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		os.Chdir(cwd)
+		os.RemoveAll(tmpDir)
+	})
+	return tmpDir
+}
+
 func TestGeneratorService(t *testing.T) {
-	cmd := generator.GeneratorCmd
+	tmpDir := chdir(t)
 
-	executeCommandC(cmd, "service", "foo_bar")
-	// 判断是否在 ./internal/service 目录下创建了foo文件，并删除
-	serviceFilePath := filepath.Join("./internal/service", "foo_bar.go")
-	if _, err := os.Stat(serviceFilePath); os.IsNotExist(err) {
-		t.Errorf("Service file not created: %s", serviceFilePath)
-	}
-	executeCommandC(cmd, "service", "foo_bar", "--force")
-	if err := os.Remove(serviceFilePath); err != nil {
-		t.Errorf("Failed to remove service file: %v", err)
-	}
-	if err := os.RemoveAll("./internal"); err != nil {
-		t.Errorf("Failed to remove internal directory: %v", err)
-	}
-	// 判断是否在 ./internal/service 目录下删除了foo文件
-	if _, err := os.Stat(serviceFilePath); err == nil {
-		t.Errorf("Service file not deleted: %s", serviceFilePath)
-	}
-	// 判断是否在当前目录下删除了internal目录
-	if _, err := os.Stat("./internal"); err == nil {
-		t.Errorf("Internal directory not deleted: %s", "./internal")
-	}
+	t.Run("default path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo_bar")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "internal", "service", "foo_bar.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package service")
+		assertFileContains(t, filePath, "FooBarService")
+	})
 
-	executeCommandC(cmd, "service", "foo_bar", "--path", "./custom/service")
-	// 判断是否在 ./custom/service 目录下创建了foo文件，并删除
-	serviceFilePath = filepath.Join("./custom/service", "foo_bar.go")
-	if _, err := os.Stat(serviceFilePath); os.IsNotExist(err) {
-		t.Errorf("Service file not created: %s", serviceFilePath)
-	}
-	if err := os.Remove(serviceFilePath); err != nil {
-		t.Errorf("Failed to remove service file: %v", err)
-	}
-	if err := os.RemoveAll("./custom"); err != nil {
-		t.Errorf("Failed to remove custom directory: %v", err)
-	}
-	// 判断是否在 ./custom/service 目录下删除了foo文件
-	if _, err := os.Stat(serviceFilePath); err == nil {
-		t.Errorf("Service file not deleted: %s", serviceFilePath)
-	}
-	// 判断是否在当前目录下删除了custom目录
-	if _, err := os.Stat("./custom"); err == nil {
-		t.Errorf("Custom directory not deleted: %s", "./custom")
-	}
+	t.Run("force overwrite", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo_bar", "--force")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "service", "foo_bar.go"))
+	})
 
+	t.Run("custom path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo_bar", "--path", "./custom/service")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "custom", "service", "foo_bar.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package service")
+	})
 }
 
 func TestGeneratorDomain(t *testing.T) {
-	cmd := generator.GeneratorCmd
+	tmpDir := chdir(t)
 
-	executeCommandC(cmd, "domain", "foo")
-	// 判断是否在 ./internal/domain 目录下创建了foo文件，并删除
-	domainFilePath := filepath.Join("./internal/domain", "foo.go")
-	if _, err := os.Stat(domainFilePath); os.IsNotExist(err) {
-		t.Errorf("Domain file not created: %s", domainFilePath)
-	}
-	executeCommandC(cmd, "domain", "foo", "--force")
-	if err := os.Remove(domainFilePath); err != nil {
-		t.Errorf("Failed to remove domain file: %v", err)
-	}
-	if err := os.RemoveAll("./internal"); err != nil {
-		t.Errorf("Failed to remove internal directory: %v", err)
-	}
-	// 判断是否在 ./internal/domain 目录下删除了foo文件
-	if _, err := os.Stat(domainFilePath); err == nil {
-		t.Errorf("Domain file not deleted: %s", domainFilePath)
-	}
-	// 判断是否在当前目录下删除了internal目录
-	if _, err := os.Stat("./internal"); err == nil {
-		t.Errorf("Internal directory not deleted: %s", "./internal")
-	}
+	t.Run("default path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "domain", "foo")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "internal", "domain", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package domain")
+	})
 
-	executeCommandC(cmd, "domain", "foo", "--path", "./custom/domain")
-	// 判断是否在 ./custom/domain 目录下创建了foo文件，并删除
-	domainFilePath = filepath.Join("./custom/domain", "foo.go")
-	if _, err := os.Stat(domainFilePath); os.IsNotExist(err) {
-		t.Errorf("Domain file not created: %s", domainFilePath)
-	}
-	if err := os.Remove(domainFilePath); err != nil {
-		t.Errorf("Failed to remove domain file: %v", err)
-	}
-	if err := os.RemoveAll("./custom"); err != nil {
-		t.Errorf("Failed to remove custom directory: %v", err)
-	}
-	// 判断是否在 ./custom/domain 目录下删除了foo文件
-	if _, err := os.Stat(domainFilePath); err == nil {
-		t.Errorf("Domain file not deleted: %s", domainFilePath)
-	}
-	// 判断是否在当前目录下删除了custom目录
-	if _, err := os.Stat("./custom"); err == nil {
-		t.Errorf("Custom directory not deleted: %s", "./custom")
-	}
+	t.Run("force overwrite", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "domain", "foo", "--force")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "domain", "foo.go"))
+	})
+
+	t.Run("custom path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "domain", "foo", "--path", "./custom/domain")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "custom", "domain", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package domain")
+	})
 }
 
 func TestGeneratorRepository(t *testing.T) {
-	cmd := generator.GeneratorCmd
+	tmpDir := chdir(t)
 
-	executeCommandC(cmd, "repository", "foo")
-	// 判断是否在 ./internal/repository 目录下创建了foo文件，并删除
-	repositoryFilePath := filepath.Join("./internal/repository", "foo.go")
-	if _, err := os.Stat(repositoryFilePath); os.IsNotExist(err) {
-		t.Errorf("Repository file not created: %s", repositoryFilePath)
-	}
-	executeCommandC(cmd, "repository", "foo", "--force")
-	if err := os.Remove(repositoryFilePath); err != nil {
-		t.Errorf("Failed to remove repository file: %v", err)
-	}
-	if err := os.RemoveAll("./internal"); err != nil {
-		t.Errorf("Failed to remove internal directory: %v", err)
-	}
-	// 判断是否在 ./internal/repository 目录下删除了foo文件
-	if _, err := os.Stat(repositoryFilePath); err == nil {
-		t.Errorf("Repository file not deleted: %s", repositoryFilePath)
-	}
-	// 判断是否在当前目录下删除了internal目录
-	if _, err := os.Stat("./internal"); err == nil {
-		t.Errorf("Internal directory not deleted: %s", "./internal")
-	}
+	t.Run("default path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "repository", "foo")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "internal", "repository", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package repository")
+		assertFileContains(t, filePath, "FooRepository")
+	})
 
-	executeCommandC(cmd, "repository", "foo", "--path", "./custom/repository")
-	// 判断是否在 ./custom/repository 目录下创建了foo文件，并删除
-	repositoryFilePath = filepath.Join("./custom/repository", "foo.go")
-	if _, err := os.Stat(repositoryFilePath); os.IsNotExist(err) {
-		t.Errorf("Repository file not created: %s", repositoryFilePath)
-	}
-	if err := os.Remove(repositoryFilePath); err != nil {
-		t.Errorf("Failed to remove repository file: %v", err)
-	}
-	if err := os.RemoveAll("./custom"); err != nil {
-		t.Errorf("Failed to remove custom directory: %v", err)
-	}
-	// 判断是否在 ./custom/repository 目录下删除了foo文件
-	if _, err := os.Stat(repositoryFilePath); err == nil {
-		t.Errorf("Repository file not deleted: %s", repositoryFilePath)
-	}
-	// 判断是否在当前目录下删除了custom目录
-	if _, err := os.Stat("./custom"); err == nil {
-		t.Errorf("Custom directory not deleted: %s", "./custom")
-	}
+	t.Run("force overwrite", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "repository", "foo", "--force")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "repository", "foo.go"))
+	})
+
+	t.Run("custom path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "repository", "foo", "--path", "./custom/repository")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "custom", "repository", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package repository")
+	})
 }
 
 func TestGeneratorTask(t *testing.T) {
-	cmd := generator.GeneratorCmd
+	tmpDir := chdir(t)
 
-	executeCommandC(cmd, "task", "foo")
-	// 判断是否在 ./internal/task 目录下创建了foo文件，并删除
-	taskFilePath := filepath.Join("./internal/task", "foo.go")
-	if _, err := os.Stat(taskFilePath); os.IsNotExist(err) {
-		t.Errorf("Task file not created: %s", taskFilePath)
-	}
-	executeCommandC(cmd, "task", "foo", "--force")
-	if err := os.Remove(taskFilePath); err != nil {
-		t.Errorf("Failed to remove task file: %v", err)
-	}
-	if err := os.RemoveAll("./internal"); err != nil {
-		t.Errorf("Failed to remove internal directory: %v", err)
-	}
-	// 判断是否在 ./internal/task 目录下删除了foo文件
-	if _, err := os.Stat(taskFilePath); err == nil {
-		t.Errorf("Task file not deleted: %s", taskFilePath)
-	}
-	// 判断是否在当前目录下删除了internal目录
-	if _, err := os.Stat("./internal"); err == nil {
-		t.Errorf("Internal directory not deleted: %s", "./internal")
-	}
+	t.Run("default path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "task", "foo")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "internal", "task", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package task")
+		assertFileContains(t, filePath, "FooTask")
+	})
 
-	executeCommandC(cmd, "task", "foo", "--path", "./custom/task")
-	// 判断是否在 ./custom/task 目录下创建了foo文件，并删除
-	taskFilePath = filepath.Join("./custom/task", "foo.go")
-	if _, err := os.Stat(taskFilePath); os.IsNotExist(err) {
-		t.Errorf("Task file not created: %s", taskFilePath)
-	}
-	if err := os.Remove(taskFilePath); err != nil {
-		t.Errorf("Failed to remove task file: %v", err)
-	}
-	if err := os.RemoveAll("./custom"); err != nil {
-		t.Errorf("Failed to remove custom directory: %v", err)
-	}
-	// 判断是否在 ./custom/task 目录下删除了foo文件
-	if _, err := os.Stat(taskFilePath); err == nil {
-		t.Errorf("Task file not deleted: %s", taskFilePath)
-	}
-	// 判断是否在当前目录下删除了custom目录
-	if _, err := os.Stat("./custom"); err == nil {
-		t.Errorf("Custom directory not deleted: %s", "./custom")
-	}
+	t.Run("force overwrite", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "task", "foo", "--force")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "task", "foo.go"))
+	})
+
+	t.Run("custom path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "task", "foo", "--path", "./custom/task")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "custom", "task", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package task")
+	})
 }
 
 func TestGeneratorController(t *testing.T) {
-	cmd := generator.GeneratorCmd
+	tmpDir := chdir(t)
 
-	executeCommandC(cmd, "controller", "foo")
-	// 判断是否在 ./internal/controller 目录下创建了foo文件，并删除
-	controllerFilePath := filepath.Join("./controller", "foo.go")
-	if _, err := os.Stat(controllerFilePath); os.IsNotExist(err) {
-		t.Errorf("Controller file not created: %s", controllerFilePath)
-	}
-	executeCommandC(cmd, "controller", "foo", "--force")
-	if err := os.Remove(controllerFilePath); err != nil {
-		t.Errorf("Failed to remove controller file: %v", err)
-	}
-	if err := os.RemoveAll("./controller"); err != nil {
-		t.Errorf("Failed to remove controller directory: %v", err)
-	}
-	// 判断是否在 ./internal/controller 目录下删除了foo文件
-	if _, err := os.Stat(controllerFilePath); err == nil {
-		t.Errorf("Controller file not deleted: %s", controllerFilePath)
-	}
-	// 判断是否在 ./controller 目录下删除了controller目录
-	if _, err := os.Stat("./controller"); err == nil {
-		t.Errorf("Controller directory not deleted: %s", "./controller")
-	}
+	t.Run("default path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "controller", "foo")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "controller", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package controller")
+		assertFileContains(t, filePath, "FooController")
+	})
 
-	executeCommandC(cmd, "controller", "foo", "--path", "./custom/controller")
-	// 判断是否在 ./custom/controller 目录下创建了foo文件，并删除
-	controllerFilePath = filepath.Join("./custom/controller", "foo.go")
-	if _, err := os.Stat(controllerFilePath); os.IsNotExist(err) {
-		t.Errorf("Controller file not created: %s", controllerFilePath)
-	}
-	if err := os.Remove(controllerFilePath); err != nil {
-		t.Errorf("Failed to remove controller file: %v", err)
-	}
-	if err := os.RemoveAll("./custom"); err != nil {
-		t.Errorf("Failed to remove controller directory: %v", err)
-	}
-	// 判断是否在 ./custom/controller 目录下删除了foo文件
-	if _, err := os.Stat(controllerFilePath); err == nil {
-		t.Errorf("Controller file not deleted: %s", controllerFilePath)
-	}
-	// 判断是否在当前目录下删除了custom目录
-	if _, err := os.Stat("./controller"); err == nil {
-		t.Errorf("Controller directory not deleted: %s", "./controller")
-	}
+	t.Run("force overwrite", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "controller", "foo", "--force")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		assertFileExists(t, filepath.Join(tmpDir, "controller", "foo.go"))
+	})
+
+	t.Run("custom path", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "controller", "foo", "--path", "./custom/controller")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		filePath := filepath.Join(tmpDir, "custom", "controller", "foo.go")
+		assertFileExists(t, filePath)
+		assertFileContains(t, filePath, "package controller")
+	})
 }
 
 func TestGeneratorSuite(t *testing.T) {
-	cmd := generator.GeneratorCmd
+	tmpDir := chdir(t)
 
-	executeCommandC(cmd, "suite", "foo")
-	// 判断是否在 ./internal/repository 目录下创建了foo文件，并删除
-	repositoryFilePath := filepath.Join("./internal/repository", "foo.go")
-	if _, err := os.Stat(repositoryFilePath); os.IsNotExist(err) {
-		t.Errorf("Repository file not created: %s", repositoryFilePath)
+	t.Run("generates domain, repository and service", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "suite", "foo")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+
+		domainPath := filepath.Join(tmpDir, "internal", "domain", "foo.go")
+		assertFileExists(t, domainPath)
+		assertFileContains(t, domainPath, "package domain")
+
+		repositoryPath := filepath.Join(tmpDir, "internal", "repository", "foo.go")
+		assertFileExists(t, repositoryPath)
+		assertFileContains(t, repositoryPath, "package repository")
+
+		servicePath := filepath.Join(tmpDir, "internal", "service", "foo.go")
+		assertFileExists(t, servicePath)
+		assertFileContains(t, servicePath, "package service")
+	})
+
+	t.Run("force overwrite", func(t *testing.T) {
+		_, _, err := executeCommandC(generator.GeneratorCmd, "suite", "foo", "--force")
+		if err != nil {
+			t.Fatalf("command failed: %v", err)
+		}
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "domain", "foo.go"))
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "repository", "foo.go"))
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "service", "foo.go"))
+	})
+}
+
+func TestGeneratorAliases(t *testing.T) {
+	tmpDir := chdir(t)
+
+	// 每个别名对应的实际路径（与 defaultPath 一致）
+	paths := map[string]string{
+		"c": filepath.Join("controller", "foo.go"),
+		"d": filepath.Join("internal", "domain", "foo.go"),
+		"r": filepath.Join("internal", "repository", "foo.go"),
+		"s": filepath.Join("internal", "service", "foo.go"),
+		"t": filepath.Join("internal", "task", "foo.go"),
 	}
-	serviceFilePath := filepath.Join("./internal/service", "foo.go")
-	if _, err := os.Stat(serviceFilePath); os.IsNotExist(err) {
-		t.Errorf("Service file not created: %s", serviceFilePath)
-	}
-	domainFilePath := filepath.Join("./internal/domain", "foo.go")
-	if _, err := os.Stat(domainFilePath); os.IsNotExist(err) {
-		t.Errorf("Domain file not created: %s", domainFilePath)
+	pkgNames := map[string]string{
+		"c": "package controller",
+		"d": "package domain",
+		"r": "package repository",
+		"s": "package service",
+		"t": "package task",
 	}
 
-	if err := os.RemoveAll("./internal"); err != nil {
-		t.Errorf("Failed to remove repository directory: %v", err)
+	for alias, relPath := range paths {
+		t.Run(alias, func(t *testing.T) {
+			_, _, err := executeCommandC(generator.GeneratorCmd, alias, "foo")
+			if err != nil {
+				t.Fatalf("command %q failed: %v", alias, err)
+			}
+			assertFileContains(t, filepath.Join(tmpDir, relPath), pkgNames[alias])
+		})
 	}
-	// 判断是否在 ./internal/repository 目录下删除了foo文件
-	if _, err := os.Stat(repositoryFilePath); err == nil {
-		t.Errorf("Repository file not deleted: %s", repositoryFilePath)
+}
+
+func TestGeneratorNoArgs(t *testing.T) {
+	commands := []string{"service", "domain", "repository", "task", "controller"}
+	for _, name := range commands {
+		t.Run(name, func(t *testing.T) {
+			_, _, err := executeCommandC(generator.GeneratorCmd, name)
+			if err == nil {
+				t.Errorf("expected error for %q with no args, got nil", name)
+			}
+		})
 	}
-	// 判断是否在 ./internal/service 目录下删除了foo文件
-	if _, err := os.Stat(serviceFilePath); err == nil {
-		t.Errorf("Service file not deleted: %s", serviceFilePath)
+}
+
+func TestGeneratorCamelCaseConversion(t *testing.T) {
+	tmpDir := chdir(t)
+
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{"foo_bar", "FooBar"},
+		{"my_service", "MyService"},
+		{"simple", "Simple"},
 	}
-	// 判断是否在 ./internal/domain 目录下删除了foo文件
-	if _, err := os.Stat(domainFilePath); err == nil {
-		t.Errorf("Domain file not deleted: %s", domainFilePath)
+
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			_, _, err := executeCommandC(generator.GeneratorCmd, "service", tt.input)
+			if err != nil {
+				t.Fatalf("command failed: %v", err)
+			}
+			filePath := filepath.Join(tmpDir, "internal", "service", tt.input+".go")
+			assertFileContains(t, filePath, tt.expected)
+		})
 	}
-	// 判断是否在当前目录下删除了internal目录
-	if _, err := os.Stat("./internal"); err == nil {
-		t.Errorf("Repository directory not deleted: %s", "./internal")
+}
+
+func assertFileExists(t *testing.T, path string) {
+	t.Helper()
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		t.Errorf("expected file to exist: %s", path)
+	}
+}
+
+func assertFileContains(t *testing.T, path, substr string) {
+	t.Helper()
+	content, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("failed to read file %s: %v", path, err)
+	}
+	if !strings.Contains(string(content), substr) {
+		t.Errorf("file %s does not contain %q, got:\n%s", path, substr, string(content))
 	}
 }
