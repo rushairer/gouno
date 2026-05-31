@@ -13,7 +13,7 @@ var serviceCmd = &cobra.Command{
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generateFile(cmd, args, "service", defaultServicePath, serviceTemplate)
+		return generateFile(cmd, args, "service", defaultServicePath)
 	},
 }
 
@@ -22,19 +22,5 @@ var defaultServicePath = filepath.Join("internal", "service")
 func init() {
 	serviceCmd.Flags().StringP("path", "p", defaultServicePath, "path to service")
 	serviceCmd.Flags().BoolP("force", "f", false, "force overwrite")
+	serviceCmd.Flags().String("template-set", "", "template set name")
 }
-
-const serviceTemplate = `package service
-
-import "context"
-
-type %sService struct {
-}
-
-func New%sService() *%sService {
-	return &%sService{}
-}
-
-func (s *%sService) Foo(ctx context.Context) (bar string, err error) {
-	return
-}`

@@ -10,10 +10,17 @@ import (
 )
 
 // generateFile 是所有代码生成器的公共逻辑：
-// 1. 将名称转为驼峰命名
-// 2. 在目标目录下创建文件
-// 3. 若文件已存在且未指定 --force，跳过并提示
-func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath, tmpl string) error {
+// 1. 确定模板集并加载模板
+// 2. 将名称转为驼峰命名
+// 3. 在目标目录下创建文件
+// 4. 若文件已存在且未指定 --force，跳过并提示
+func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath string) error {
+	templateSet := resolveTemplateSet(cmd)
+	tmpl, err := loadTemplate(cmd, templateSet, typeName)
+	if err != nil {
+		return err
+	}
+
 	name := args[0]
 	structName := utility.ToCamelCase(name)
 

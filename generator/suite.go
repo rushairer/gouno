@@ -8,16 +8,17 @@ var suiteCmd = &cobra.Command{
 	DisableFlagsInUseLine: true,
 	Args:                  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if err := generateFile(cmd, args, "domain", defaultDomainPath, domainTemplate); err != nil {
+		if err := generateFile(cmd, args, "domain", defaultDomainPath); err != nil {
 			return err
 		}
-		if err := generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate); err != nil {
+		if err := generateFile(cmd, args, "repository", defaultRepositoryPath); err != nil {
 			return err
 		}
-		return generateFile(cmd, args, "service", defaultServicePath, serviceTemplate)
+		return generateFile(cmd, args, "service", defaultServicePath)
 	},
 }
 
 func init() {
 	suiteCmd.Flags().BoolP("force", "f", false, "force overwrite")
+	suiteCmd.Flags().String("template-set", "", "template set name")
 }

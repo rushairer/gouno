@@ -13,7 +13,7 @@ var taskCmd = &cobra.Command{
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generateFile(cmd, args, "task", defaultTaskPath, taskTemplate)
+		return generateFile(cmd, args, "task", defaultTaskPath)
 	},
 }
 
@@ -22,19 +22,5 @@ var defaultTaskPath = filepath.Join("internal", "task")
 func init() {
 	taskCmd.Flags().StringP("path", "p", defaultTaskPath, "path to task")
 	taskCmd.Flags().BoolP("force", "f", false, "force overwrite")
+	taskCmd.Flags().String("template-set", "", "template set name")
 }
-
-const taskTemplate = `package task
-
-import "context"
-
-type %sTask struct {
-}
-
-func New%sTask() *%sTask {
-	return &%sTask{}
-}
-
-func (t *%sTask) Run(ctx context.Context) error {
-	return nil
-}`

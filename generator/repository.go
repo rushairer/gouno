@@ -13,7 +13,7 @@ var repositoryCmd = &cobra.Command{
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate)
+		return generateFile(cmd, args, "repository", defaultRepositoryPath)
 	},
 }
 
@@ -22,19 +22,5 @@ var defaultRepositoryPath = filepath.Join("internal", "repository")
 func init() {
 	repositoryCmd.Flags().StringP("path", "p", defaultRepositoryPath, "path to repository")
 	repositoryCmd.Flags().BoolP("force", "f", false, "force overwrite")
+	repositoryCmd.Flags().String("template-set", "", "template set name")
 }
-
-const repositoryTemplate = `package repository
-
-import "context"
-
-type %sRepository struct {
-}
-
-func New%sRepository() *%sRepository {
-	return &%sRepository{}
-}
-
-func (r *%sRepository) Foo(ctx context.Context) (bar string, err error) {
-	return
-}`

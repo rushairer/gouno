@@ -13,7 +13,7 @@ var controllerCmd = &cobra.Command{
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return generateFile(cmd, args, "controller", defaultControllerPath, controllerTemplate)
+		return generateFile(cmd, args, "controller", defaultControllerPath)
 	},
 }
 
@@ -22,23 +22,5 @@ var defaultControllerPath = filepath.Join("controller")
 func init() {
 	controllerCmd.Flags().StringP("path", "p", defaultControllerPath, "path to controller")
 	controllerCmd.Flags().BoolP("force", "f", false, "force overwrite")
+	controllerCmd.Flags().String("template-set", "", "template set name")
 }
-
-const controllerTemplate = `package controller
-
-import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"github.com/rushairer/gouno"
-)
-
-type %sController struct {
-}
-
-func New%sController() *%sController {
-	return &%sController{}
-}
-
-func (c *%sController) Foo(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gouno.NewSuccessResponse("bar"))
-}`
