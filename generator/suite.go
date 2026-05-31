@@ -7,10 +7,14 @@ var suiteCmd = &cobra.Command{
 	Short:                 "Generate suite (domain, repository, service)",
 	DisableFlagsInUseLine: true,
 	Args:                  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		generateFile(cmd, args, "domain", defaultDomainPath, domainTemplate)
-		generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate)
-		generateFile(cmd, args, "service", defaultServicePath, serviceTemplate)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := generateFile(cmd, args, "domain", defaultDomainPath, domainTemplate); err != nil {
+			return err
+		}
+		if err := generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate); err != nil {
+			return err
+		}
+		return generateFile(cmd, args, "service", defaultServicePath, serviceTemplate)
 	},
 }
 

@@ -12,8 +12,8 @@ var taskCmd = &cobra.Command{
 	Aliases:               []string{"t"},
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		generateFile(cmd, args, "task", defaultTaskPath, taskTemplate)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return generateFile(cmd, args, "task", defaultTaskPath, taskTemplate)
 	},
 }
 

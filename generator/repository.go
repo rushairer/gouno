@@ -12,8 +12,8 @@ var repositoryCmd = &cobra.Command{
 	Aliases:               []string{"r"},
 	Args:                  cobra.ExactArgs(1),
 	DisableFlagsInUseLine: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return generateFile(cmd, args, "repository", defaultRepositoryPath, repositoryTemplate)
 	},
 }
 
