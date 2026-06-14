@@ -120,6 +120,45 @@ func TestPresetErrorResponses(t *testing.T) {
 	}
 }
 
+func TestNewErrorResponseFunctions(t *testing.T) {
+	tests := []struct {
+		name     string
+		fn       func() *gouno.Response
+		wantCode int
+	}{
+		{"InternalServerError", gouno.NewInternalServerErrorResponse, http.StatusInternalServerError},
+		{"BadRequest", gouno.NewBadRequestResponse, http.StatusBadRequest},
+		{"Unauthorized", gouno.NewUnauthorizedResponse, http.StatusUnauthorized},
+		{"Forbidden", gouno.NewForbiddenResponse, http.StatusForbidden},
+		{"NotFound", gouno.NewNotFoundResponse, http.StatusNotFound},
+		{"MethodNotAllowed", gouno.NewMethodNotAllowedResponse, http.StatusMethodNotAllowed},
+		{"RequestTimeout", gouno.NewRequestTimeoutResponse, http.StatusRequestTimeout},
+		{"Conflict", gouno.NewConflictResponse, http.StatusConflict},
+		{"Gone", gouno.NewGoneResponse, http.StatusGone},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			resp := tt.fn()
+			if resp.Code != tt.wantCode {
+				t.Errorf("Code = %d; want %d", resp.Code, tt.wantCode)
+			}
+			if resp.Data != nil {
+				t.Errorf("Data should be nil for error responses")
+			}
+		})
+	}
+
+	// Verify each call returns a fresh instance
+	t.Run("returns unique instances", func(t *testing.T) {
+		a := gouno.NewInternalServerErrorResponse()
+		b := gouno.NewInternalServerErrorResponse()
+		if a == b {
+			t.Error("NewInternalServerErrorResponse should return unique instances")
+		}
+	})
+}
+
 func TestResponseJSON(t *testing.T) {
 	t.Run("success with data", func(t *testing.T) {
 		resp := gouno.NewSuccessResponse(map[string]string{"key": "value"})

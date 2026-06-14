@@ -2,27 +2,6 @@ package gouno
 
 import "net/http"
 
-var (
-	// InternalServerErrorResponse is a preset 500 Internal Server Error response.
-	InternalServerErrorResponse = NewErrorResponse(http.StatusInternalServerError, "internal server error")
-	// BadRequestResponse is a preset 400 Bad Request response.
-	BadRequestResponse = NewErrorResponse(http.StatusBadRequest, "bad request")
-	// UnauthorizedResponse is a preset 401 Unauthorized response.
-	UnauthorizedResponse = NewErrorResponse(http.StatusUnauthorized, "unauthorized")
-	// ForbiddenResponse is a preset 403 Forbidden response.
-	ForbiddenResponse = NewErrorResponse(http.StatusForbidden, "forbidden")
-	// NotFoundResponse is a preset 404 Not Found response.
-	NotFoundResponse = NewErrorResponse(http.StatusNotFound, "not found")
-	// MethodNotAllowedResponse is a preset 405 Method Not Allowed response.
-	MethodNotAllowedResponse = NewErrorResponse(http.StatusMethodNotAllowed, "method not allowed")
-	// RequestTimeoutResponse is a preset 408 Request Timeout response.
-	RequestTimeoutResponse = NewErrorResponse(http.StatusRequestTimeout, "request timeout")
-	// ConflictResponse is a preset 409 Conflict response.
-	ConflictResponse = NewErrorResponse(http.StatusConflict, "conflict")
-	// GoneResponse is a preset 410 Gone response.
-	GoneResponse = NewErrorResponse(http.StatusGone, "gone")
-)
-
 // Response represents a unified JSON API response with a status code, message, and optional data.
 type Response struct {
 	Code    int    `json:"code"`
@@ -48,3 +27,75 @@ func NewSuccessResponse(data any) *Response {
 func NewErrorResponse(code int, message string) *Response {
 	return NewResponse(code, message, nil)
 }
+
+// NewInternalServerErrorResponse returns a new 500 Internal Server Error response.
+func NewInternalServerErrorResponse() *Response {
+	return NewErrorResponse(http.StatusInternalServerError, "internal server error")
+}
+
+// NewBadRequestResponse returns a new 400 Bad Request response.
+func NewBadRequestResponse() *Response {
+	return NewErrorResponse(http.StatusBadRequest, "bad request")
+}
+
+// NewUnauthorizedResponse returns a new 401 Unauthorized response.
+func NewUnauthorizedResponse() *Response {
+	return NewErrorResponse(http.StatusUnauthorized, "unauthorized")
+}
+
+// NewForbiddenResponse returns a new 403 Forbidden response.
+func NewForbiddenResponse() *Response {
+	return NewErrorResponse(http.StatusForbidden, "forbidden")
+}
+
+// NewNotFoundResponse returns a new 404 Not Found response.
+func NewNotFoundResponse() *Response {
+	return NewErrorResponse(http.StatusNotFound, "not found")
+}
+
+// NewMethodNotAllowedResponse returns a new 405 Method Not Allowed response.
+func NewMethodNotAllowedResponse() *Response {
+	return NewErrorResponse(http.StatusMethodNotAllowed, "method not allowed")
+}
+
+// NewRequestTimeoutResponse returns a new 408 Request Timeout response.
+func NewRequestTimeoutResponse() *Response {
+	return NewErrorResponse(http.StatusRequestTimeout, "request timeout")
+}
+
+// NewConflictResponse returns a new 409 Conflict response.
+func NewConflictResponse() *Response {
+	return NewErrorResponse(http.StatusConflict, "conflict")
+}
+
+// NewGoneResponse returns a new 410 Gone response.
+func NewGoneResponse() *Response {
+	return NewErrorResponse(http.StatusGone, "gone")
+}
+
+// Deprecated: Use NewInternalServerErrorResponse() to get a fresh instance instead.
+var InternalServerErrorResponse = NewErrorResponse(http.StatusInternalServerError, "internal server error")
+
+// Deprecated: Use NewBadRequestResponse() to get a fresh instance instead.
+var BadRequestResponse = NewErrorResponse(http.StatusBadRequest, "bad request")
+
+// Deprecated: Use NewUnauthorizedResponse() to get a fresh instance instead.
+var UnauthorizedResponse = NewErrorResponse(http.StatusUnauthorized, "unauthorized")
+
+// Deprecated: Use NewForbiddenResponse() to get a fresh instance instead.
+var ForbiddenResponse = NewErrorResponse(http.StatusForbidden, "forbidden")
+
+// Deprecated: Use NewNotFoundResponse() to get a fresh instance instead.
+var NotFoundResponse = NewErrorResponse(http.StatusNotFound, "not found")
+
+// Deprecated: Use NewMethodNotAllowedResponse() to get a fresh instance instead.
+var MethodNotAllowedResponse = NewErrorResponse(http.StatusMethodNotAllowed, "method not allowed")
+
+// Deprecated: Use NewRequestTimeoutResponse() to get a fresh instance instead.
+var RequestTimeoutResponse = NewErrorResponse(http.StatusRequestTimeout, "request timeout")
+
+// Deprecated: Use NewConflictResponse() to get a fresh instance instead.
+var ConflictResponse = NewErrorResponse(http.StatusConflict, "conflict")
+
+// Deprecated: Use NewGoneResponse() to get a fresh instance instead.
+var GoneResponse = NewErrorResponse(http.StatusGone, "gone")

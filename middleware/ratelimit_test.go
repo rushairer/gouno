@@ -2,6 +2,7 @@ package middleware_test
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"runtime"
@@ -179,6 +180,66 @@ func TestRateLimiterContextCancelMultiple(t *testing.T) {
 	after := runtime.NumGoroutine()
 	// 允许少量 goroutine 波动，但不应累积 5 个以上
 	assert.LessOrEqual(t, after-before+2, 3, "cancelled limiters should not leak goroutines")
+}
+
+func TestRateLimiterMaxVisitors(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// 设置很小的 maxVisitors 用于测试
+	limiter := middleware.NewRateLimiter(ctx, 10, time.Minute)
+	limiter.SetMaxVisitors(3)
+
+	// 前3个不同IP应该被允许
+	assert.True(t, limiter.IsAllowed("10.0.0.1"))
+	assert.True(t, limiter.IsAllowed("10.0.0.2"))
+	assert.True(t, limiter.IsAllowed("10.0.0.3"))
+
+	// 第4个新IP应该被拒绝（超过上限）
+	assert.False(t, limiter.IsAllowed("10.0.0.4"))
+
+	// 已存在的IP仍然可以正常请求
+	assert.True(t, limiter.IsAllowed("10.0.0.1"))
+}
+
+func TestRateLimiterMaxVisitorsEviction(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// limit=1, 每个IP只能请求1次，之后请求变为空闲
+	limiter := middleware.NewRateLimiter(ctx, 1, 50*time.Millisecond)
+	limiter.SetMaxVisitors(2)
+
+	// 填满2个IP
+	assert.True(t, limiter.IsAllowed("10.0.0.1"))
+	assert.True(t, limiter.IsAllowed("10.0.0.2"))
+	assert.False(t, limiter.IsAllowed("10.0.0.3")) // 超限
+
+	// 等待窗口过期，两个 visitor 的 requests slice 变为空
+	time.Sleep(100 * time.Millisecond)
+
+	// 旧 IP 再次请求会触发 IsAllowed 中的清理逻辑（requests 已过期被清除后重新添加）
+	// 但关键是：新 IP 应该可以加入，因为旧 visitor 的 requests 已被清空
+	assert.True(t, limiter.IsAllowed("10.0.0.3"))
+}
+
+func TestRateLimiterSetMaxVisitors(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limiter := middleware.NewRateLimiter(ctx, 10, time.Minute)
+
+	// 默认值允许大量 IP
+	for i := 0; i < 100; i++ {
+		assert.True(t, limiter.IsAllowed(fmt.Sprintf("10.0.0.%d", i)))
+	}
+
+	// 设置很小的上限
+	limiter.SetMaxVisitors(0) // 0 应该重置为默认值
+	limiter.SetMaxVisitors(5)
+
+	// 超过新上限的 IP 应该被拒绝
+	assert.False(t, limiter.IsAllowed("10.0.1.1"))
 }
 
 // 基准测试
