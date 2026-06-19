@@ -34,6 +34,10 @@ func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath strin
 		path = flag.Value.String()
 	}
 	dir := filepath.Join(projectRoot, path)
+	// Prevent path traversal: the resolved directory must be under projectRoot.
+	if !filepath.HasPrefix(dir, projectRoot) {
+		return fmt.Errorf("path %q resolves outside the project root", path)
+	}
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return fmt.Errorf("failed to create %s directory: %w", typeName, err)

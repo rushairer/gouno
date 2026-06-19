@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 	"sync"
@@ -28,8 +29,15 @@ type Visitor struct {
 	mu       sync.Mutex
 }
 
-// NewRateLimiter 创建新的限频器，ctx 取消时停止后台清理 goroutine
+// NewRateLimiter 创建新的限频器，ctx 取消时停止后台清理 goroutine。
+// limit 必须为正数，否则会 panic。
 func NewRateLimiter(ctx context.Context, limit int, window time.Duration) *RateLimiter {
+	if limit <= 0 {
+		panic(fmt.Sprintf("RateLimiter: limit must be positive (got %d)", limit))
+	}
+	if window <= 0 {
+		panic("RateLimiter: window must be positive")
+	}
 	rl := &RateLimiter{
 		visitors:    make(map[string]*Visitor),
 		limit:       limit,
@@ -184,12 +192,16 @@ func (rl *RateLimiter) GetResetTime(ip string) time.Time {
 	visitor, exists := rl.visitors[ip]
 	rl.mu.RUnlock()
 
-	if !exists || len(visitor.requests) == 0 {
+	if !exists {
 		return time.Now()
 	}
 
 	visitor.mu.Lock()
 	defer visitor.mu.Unlock()
+
+	if len(visitor.requests) == 0 {
+		return time.Now()
+	}
 
 	// 找到最早的有效请求
 	now := time.Now()
