@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Preset error responses (`InternalServerErrorResponse`, `BadRequestResponse`, etc.) are now supplemented with immutable constructor functions (`NewInternalServerErrorResponse()`, `NewBadRequestResponse()`, etc.) — each call returns a fresh `*Response` instance, eliminating shared mutable state risk. The old package-level variables are preserved as deprecated aliases for backward compatibility (`response.go`).
 - Rate limiter now enforces a `maxVisitors` cap (default 10000) on the visitors map — prevents memory exhaustion from large numbers of unique IPs. Use `SetMaxVisitors()` to customize. When the cap is reached, idle visitors are evicted before rejecting new IPs (`middleware/ratelimit.go`).
 
+### Removed
+- Deprecated package-level mutable response variables (`InternalServerErrorResponse`, `BadRequestResponse`, `UnauthorizedResponse`, `ForbiddenResponse`, `NotFoundResponse`, `MethodNotAllowedResponse`, `RequestTimeoutResponse`, `ConflictResponse`, `GoneResponse`) — use the corresponding `New*Response()` factory functions instead (`response.go`).
+
 ## [1.0.0] - 2026-05-31
 
 ### Added

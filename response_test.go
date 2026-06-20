@@ -91,35 +91,6 @@ func TestNewErrorResponse(t *testing.T) {
 	}
 }
 
-func TestPresetErrorResponses(t *testing.T) {
-	tests := []struct {
-		name     string
-		resp     *gouno.Response
-		wantCode int
-	}{
-		{"InternalServerError", gouno.InternalServerErrorResponse, http.StatusInternalServerError},
-		{"BadRequest", gouno.BadRequestResponse, http.StatusBadRequest},
-		{"Unauthorized", gouno.UnauthorizedResponse, http.StatusUnauthorized},
-		{"Forbidden", gouno.ForbiddenResponse, http.StatusForbidden},
-		{"NotFound", gouno.NotFoundResponse, http.StatusNotFound},
-		{"MethodNotAllowed", gouno.MethodNotAllowedResponse, http.StatusMethodNotAllowed},
-		{"RequestTimeout", gouno.RequestTimeoutResponse, http.StatusRequestTimeout},
-		{"Conflict", gouno.ConflictResponse, http.StatusConflict},
-		{"Gone", gouno.GoneResponse, http.StatusGone},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.resp.Code != tt.wantCode {
-				t.Errorf("Code = %d; want %d", tt.resp.Code, tt.wantCode)
-			}
-			if tt.resp.Data != nil {
-				t.Errorf("Data should be nil for error responses")
-			}
-		})
-	}
-}
-
 func TestNewErrorResponseFunctions(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -194,7 +165,7 @@ func TestResponseJSON(t *testing.T) {
 	})
 
 	t.Run("error response", func(t *testing.T) {
-		resp := gouno.NotFoundResponse
+		resp := gouno.NewNotFoundResponse()
 		b, err := json.Marshal(resp)
 		if err != nil {
 			t.Fatalf("json.Marshal failed: %v", err)

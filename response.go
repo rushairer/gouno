@@ -72,30 +72,3 @@ func NewConflictResponse() *Response {
 func NewGoneResponse() *Response {
 	return NewErrorResponse(http.StatusGone, "gone")
 }
-
-// Deprecated: Use NewInternalServerErrorResponse() to get a fresh instance instead.
-var InternalServerErrorResponse = NewErrorResponse(http.StatusInternalServerError, "internal server error")
-
-// Deprecated: Use NewBadRequestResponse() to get a fresh instance instead.
-var BadRequestResponse = NewErrorResponse(http.StatusBadRequest, "bad request")
-
-// Deprecated: Use NewUnauthorizedResponse() to get a fresh instance instead.
-var UnauthorizedResponse = NewErrorResponse(http.StatusUnauthorized, "unauthorized")
-
-// Deprecated: Use NewForbiddenResponse() to get a fresh instance instead.
-var ForbiddenResponse = NewErrorResponse(http.StatusForbidden, "forbidden")
-
-// Deprecated: Use NewNotFoundResponse() to get a fresh instance instead.
-var NotFoundResponse = NewErrorResponse(http.StatusNotFound, "not found")
-
-// Deprecated: Use NewMethodNotAllowedResponse() to get a fresh instance instead.
-var MethodNotAllowedResponse = NewErrorResponse(http.StatusMethodNotAllowed, "method not allowed")
-
-// Deprecated: Use NewRequestTimeoutResponse() to get a fresh instance instead.
-var RequestTimeoutResponse = NewErrorResponse(http.StatusRequestTimeout, "request timeout")
-
-// Deprecated: Use NewConflictResponse() to get a fresh instance instead.
-var ConflictResponse = NewErrorResponse(http.StatusConflict, "conflict")
-
-// Deprecated: Use NewGoneResponse() to get a fresh instance instead.
-var GoneResponse = NewErrorResponse(http.StatusGone, "gone")
