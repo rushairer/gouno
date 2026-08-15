@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
 	"time"
 
@@ -127,5 +128,69 @@ func TestVerifierRejectsWrongClient(t *testing.T) {
 
 	if _, err := verifier.Verify(token, Options{Audience: "blog-spa", ClientID: "blog-spa"}); err == nil {
 		t.Fatal("expected authorized party mismatch error")
+	}
+}
+
+func TestVerifierSingleflightAndCooldown(t *testing.T) {
+	requestCount := 0
+	var mu sync.Mutex
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatalf("generate key: %v", err)
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		requestCount++
+		mu.Unlock()
+		jwks := JWKS{Keys: []JWK{jwkFromPublicKey(&privateKey.PublicKey)}}
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(jwks)
+	}))
+	defer server.Close()
+
+	verifier := &Verifier{
+		jwksURL: server.URL,
+		keys:    make(map[string]*rsa.PublicKey),
+	}
+
+	// Trigger concurrent key refreshes.
+	var wg sync.WaitGroup
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			_ = verifier.refreshKeys()
+		}()
+	}
+	wg.Wait()
+
+	mu.Lock()
+	countBefore := requestCount
+	mu.Unlock()
+	if countBefore != 1 {
+		t.Errorf("expected exactly 1 HTTP request due to singleflight, got %d", countBefore)
+	}
+
+	// A sequential request immediately after should be ignored due to cooldown.
+	if err := verifier.refreshKeys(); err != nil {
+		t.Fatalf("refreshKeys: %v", err)
+	}
+	mu.Lock()
+	countAfter := requestCount
+	mu.Unlock()
+	if countAfter != 1 {
+		t.Errorf("expected request count to remain 1 due to cooldown, got %d", countAfter)
+	}
+}
+
+func TestVerifierRejectsNonSuccessJWKSResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusServiceUnavailable)
+	}))
+	defer server.Close()
+	verifier := &Verifier{jwksURL: server.URL, keys: make(map[string]*rsa.PublicKey)}
+	if err := verifier.refreshKeys(); err == nil {
+		t.Fatal("expected non-success JWKS response to fail")
 	}
 }
