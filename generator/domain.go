@@ -22,5 +22,4 @@ var defaultDomainPath = filepath.Join("internal", "domain")
 func init() {
 	domainCmd.Flags().StringP("path", "p", defaultDomainPath, "path to domain")
 	domainCmd.Flags().BoolP("force", "f", false, "force overwrite")
-	domainCmd.Flags().String("template-set", "", "template set name")
 }

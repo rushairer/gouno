@@ -39,34 +39,22 @@ gouno gen controller auth
 
 [Full guide →](https://github.com/rushairer/gouno-doc/blob/main/code-generation.md)
 
-## Template Sets
-
-Customize what `gouno gen` produces. Different teams, different code styles — all without touching gouno's source.
-
-```bash
-gouno-cli template install gorm https://github.com/myorg/gouno-template-gorm
-gouno-cli new order-service --template-set gorm -m github.com/myorg/order-service
-```
-
-[Create your own template set →](https://github.com/rushairer/gouno-doc/blob/main/template-sets.md)
-
 ## Documentation
 
 | Guide | Description |
 |-------|-------------|
 | [Getting Started](https://github.com/rushairer/gouno-doc/blob/main/getting-started.md) | Install, create project, run |
 | [Code Generation](https://github.com/rushairer/gouno-doc/blob/main/code-generation.md) | Generate DDD modules |
-| [Template Sets](https://github.com/rushairer/gouno-doc/blob/main/template-sets.md) | Create and share custom templates |
 | [Configuration](https://github.com/rushairer/gouno-doc/blob/main/configuration.md) | Multi-environment YAML config |
 | [Middleware](https://github.com/rushairer/gouno-doc/blob/main/middleware.md) | Built-in and custom middleware |
 
 ## Philosophy
 
-**gouno is a launcher, not a framework.** It gives you a standardized starting point, then gets out of the way. The real customization happens in **template sets** — your team's code style, your tech stack choices, your patterns — all captured as reusable templates.
+**gouno is a launcher, not a framework.** It gives you a standardized starting point, then gets out of the way.
 
 ```
 gouno (core)          → Standardizes: project structure + startup + web layer + response
-template sets         → Customizes: code style + tech stack + team conventions
+gouno-template        → Project skeleton: DDD architecture + config + gin + viper
 your business code    → Implements: actual product logic
 ```
 
@@ -76,9 +64,10 @@ your business code    → Implements: actual product logic
 |------------|-------------|
 | [gouno](https://github.com/rushairer/gouno) | Core library (this repo) |
 | [gouno-cli](https://github.com/rushairer/gouno-cli) | CLI tool |
-| [gouno-template](https://github.com/rushairer/gouno-template) | Default template set |
+| [gouno-template](https://github.com/rushairer/gouno-template) | Default project template |
 | [gouno-doc](https://github.com/rushairer/gouno-doc) | Documentation |
 
 ## License
 
 MIT License.
+

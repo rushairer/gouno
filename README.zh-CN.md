@@ -39,34 +39,22 @@ gouno gen controller auth
 
 [完整指南 →](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/code-generation.md)
 
-## 模板集
-
-自定义 `gouno gen` 的输出。不同团队、不同代码风格——无需修改 gouno 源码。
-
-```bash
-gouno-cli template install gorm https://github.com/myorg/gouno-template-gorm
-gouno-cli new order-service --template-set gorm -m github.com/myorg/order-service
-```
-
-[创建自定义模板集 →](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/template-sets.md)
-
 ## 文档
 
 | 指南 | 说明 |
 |------|------|
 | [快速开始](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/getting-started.md) | 安装、创建项目、运行 |
 | [代码生成](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/code-generation.md) | 生成 DDD 模块 |
-| [模板集](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/template-sets.md) | 创建和分享自定义模板 |
 | [配置管理](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/configuration.md) | 多环境 YAML 配置 |
 | [中间件](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/middleware.md) | 内置中间件与自定义扩展 |
 
 ## 设计理念
 
-**gouno 是启动器，不是框架。** 它给你一个标准化的起点，然后让开。真正的定制通过**模板集**完成——你的代码风格、技术选型、团队规范——全部封装为可复用的模板。
+**gouno 是启动器，不是框架。** 它给你一个标准化的起点，然后让开。
 
 ```
 gouno（核心）         → 标准化：项目结构 + 启动流程 + Web 层 + 响应格式
-模板集                → 定制化：代码风格 + 技术选型 + 团队规范
+gouno-template        → 项目骨架：DDD 架构 + 配置 + Gin + Viper
 你的业务代码          → 实现：产品逻辑
 ```
 
@@ -76,9 +64,10 @@ gouno（核心）         → 标准化：项目结构 + 启动流程 + Web 层 
 |------|------|
 | [gouno](https://github.com/rushairer/gouno) | 核心库（本仓库） |
 | [gouno-cli](https://github.com/rushairer/gouno-cli) | CLI 工具 |
-| [gouno-template](https://github.com/rushairer/gouno-template) | 默认模板集 |
+| [gouno-template](https://github.com/rushairer/gouno-template) | 默认项目模板 |
 | [gouno-doc](https://github.com/rushairer/gouno-doc) | 文档 |
 
 ## 许可证
 
 MIT License。
+

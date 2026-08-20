@@ -20,5 +20,4 @@ var suiteCmd = &cobra.Command{
 
 func init() {
 	suiteCmd.Flags().BoolP("force", "f", false, "force overwrite")
-	suiteCmd.Flags().String("template-set", "", "template set name")
 }

@@ -22,5 +22,4 @@ var defaultRepositoryPath = filepath.Join("internal", "repository")
 func init() {
 	repositoryCmd.Flags().StringP("path", "p", defaultRepositoryPath, "path to repository")
 	repositoryCmd.Flags().BoolP("force", "f", false, "force overwrite")
-	repositoryCmd.Flags().String("template-set", "", "template set name")
 }

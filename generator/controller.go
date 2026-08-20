@@ -17,10 +17,9 @@ var controllerCmd = &cobra.Command{
 	},
 }
 
-var defaultControllerPath = filepath.Join("controller")
+var defaultControllerPath = filepath.Join("internal", "controller")
 
 func init() {
 	controllerCmd.Flags().StringP("path", "p", defaultControllerPath, "path to controller")
 	controllerCmd.Flags().BoolP("force", "f", false, "force overwrite")
-	controllerCmd.Flags().String("template-set", "", "template set name")
 }

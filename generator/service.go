@@ -22,5 +22,4 @@ var defaultServicePath = filepath.Join("internal", "service")
 func init() {
 	serviceCmd.Flags().StringP("path", "p", defaultServicePath, "path to service")
 	serviceCmd.Flags().BoolP("force", "f", false, "force overwrite")
-	serviceCmd.Flags().String("template-set", "", "template set name")
 }

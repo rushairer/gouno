@@ -191,7 +191,7 @@ func TestGeneratorController(t *testing.T) {
 		if err != nil {
 			t.Fatalf("command failed: %v", err)
 		}
-		filePath := filepath.Join(tmpDir, "controller", "foo.go")
+		filePath := filepath.Join(tmpDir, "internal", "controller", "foo.go")
 		assertFileExists(t, filePath)
 		assertFileContains(t, filePath, "package controller")
 		assertFileContains(t, filePath, "FooController")
@@ -202,7 +202,7 @@ func TestGeneratorController(t *testing.T) {
 		if err != nil {
 			t.Fatalf("command failed: %v", err)
 		}
-		assertFileExists(t, filepath.Join(tmpDir, "controller", "foo.go"))
+		assertFileExists(t, filepath.Join(tmpDir, "internal", "controller", "foo.go"))
 	})
 
 	t.Run("custom path", func(t *testing.T) {
@@ -254,7 +254,7 @@ func TestGeneratorAliases(t *testing.T) {
 
 	// 每个别名对应的实际路径（与 defaultPath 一致）
 	paths := map[string]string{
-		"c": filepath.Join("controller", "foo.go"),
+		"c": filepath.Join("internal", "controller", "foo.go"),
 		"d": filepath.Join("internal", "domain", "foo.go"),
 		"r": filepath.Join("internal", "repository", "foo.go"),
 		"s": filepath.Join("internal", "service", "foo.go"),

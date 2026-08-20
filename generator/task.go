@@ -22,5 +22,4 @@ var defaultTaskPath = filepath.Join("internal", "task")
 func init() {
 	taskCmd.Flags().StringP("path", "p", defaultTaskPath, "path to task")
 	taskCmd.Flags().BoolP("force", "f", false, "force overwrite")
-	taskCmd.Flags().String("template-set", "", "template set name")
 }

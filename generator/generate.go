@@ -16,8 +16,7 @@ import (
 // 3. 在目标目录下创建文件
 // 4. 若文件已存在且未指定 --force，跳过并提示
 func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath string) error {
-	templateSet := resolveTemplateSet(cmd)
-	tmpl, err := loadTemplate(cmd, templateSet, typeName)
+	tmpl, err := loadTemplate(typeName)
 	if err != nil {
 		return err
 	}
