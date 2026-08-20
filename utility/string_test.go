@@ -16,6 +16,13 @@ func TestToCamelCase(t *testing.T) {
 		{"snake_case", "SnakeCase"},
 		{"simple", "Simple"},
 		{"a", "A"},
+		{"", ""},
+		{"hello__world", "HelloWorld"},
+		{"_hello_", "Hello"},
+		{"HELLO_WORLD", "HelloWorld"},
+		{"123_abc", "123Abc"},
+		{"user2id", "User2id"},
+		{"hello-world", "Hello-World"},
 	}
 
 	for _, tt := range tests {
@@ -38,6 +45,14 @@ func TestToSnakeCase(t *testing.T) {
 		{"SnakeCase", "snake_case"},
 		{"123ABC", "123_abc"},
 		{"Simple", "simple"},
+		{"", ""},
+		{"hello__world", "hello__world"},
+		{"HELLOWORLD", "helloworld"},
+		{"HTTPRequest", "httprequest"},
+		{"foo1Bar", "foo1_bar"},
+		{"1Hello", "1_hello"},
+		{"aB_cD", "a_b_c_d"},
+		{"你好World", "你好world"},
 	}
 
 	for _, tt := range tests {

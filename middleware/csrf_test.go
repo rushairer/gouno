@@ -68,3 +68,52 @@ func TestEnsureCSRFCookie(t *testing.T) {
 		t.Fatalf("unexpected cookie attributes: %+v", cookie)
 	}
 }
+
+func TestEnsureCSRFCookieKeepsExisting(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	router := gin.New()
+	var cookieCount int
+	router.GET("/", func(ctx *gin.Context) {
+		if err := EnsureCSRFCookie(ctx, "csrf", true, time.Hour); err != nil {
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+		cookieCount = len(ctx.Writer.Header().Values("Set-Cookie"))
+		ctx.Status(http.StatusNoContent)
+	})
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.AddCookie(&http.Cookie{Name: "csrf", Value: "existing-token"})
+	router.ServeHTTP(rec, req)
+
+	if cookieCount != 0 {
+		t.Fatalf("expected no new cookie when one already exists, got %d", cookieCount)
+	}
+}
+
+func TestSetCSRFCookie(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	rec := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(rec)
+
+	SetCSRFCookie(ctx, "csrf", "token-123", false, 30*time.Minute)
+
+	cookie := rec.Result().Cookies()
+	if len(cookie) != 1 {
+		t.Fatalf("expected one cookie, got %d", len(cookie))
+	}
+	c := cookie[0]
+	if c.Name != "csrf" || c.Value != "token-123" {
+		t.Fatalf("unexpected cookie: %+v", c)
+	}
+	if c.MaxAge != 1800 { // 30 分钟 → 1800 秒
+		t.Fatalf("expected MaxAge 1800, got %d", c.MaxAge)
+	}
+	if c.Path != "/" || c.Secure || c.HttpOnly {
+		t.Fatalf("unexpected attributes: %+v", c)
+	}
+	if c.SameSite != http.SameSiteLaxMode {
+		t.Fatalf("expected SameSite=Lax, got %v", c.SameSite)
+	}
+}

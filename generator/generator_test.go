@@ -341,7 +341,7 @@ func TestGeneratorSkipExisting(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to stat file: %v", err)
 	}
-	if info1.ModTime() != info2.ModTime() {
+	if !info1.ModTime().Equal(info2.ModTime()) {
 		t.Errorf("file should not be modified when skipped (modtime changed)")
 	}
 
@@ -354,8 +354,44 @@ func TestGeneratorSkipExisting(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to stat file: %v", err)
 	}
-	if info2.ModTime() == info3.ModTime() {
+	if info2.ModTime().Equal(info3.ModTime()) {
 		t.Errorf("file should be modified with --force (modtime unchanged)")
+	}
+}
+
+func TestGeneratorPathTraversal(t *testing.T) {
+	tmpDir := chdir(t)
+	parentDir := filepath.Dir(tmpDir)
+
+	tests := []struct {
+		name    string
+		path    string
+		wantErr bool
+	}{
+		{"parent traversal", "../outside", true},
+		{"nested traversal", "./custom/../../outside", true},
+		// 绝对路径经 filepath.Join 会被降级为项目根内的子路径，不会越界，但也不允许写到外部
+		{"absolute path outside root", filepath.Join(parentDir, "outside"), false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo", "--path", tt.path)
+			if tt.wantErr {
+				if err == nil {
+					t.Fatalf("expected error for path %q, got nil", tt.path)
+				}
+				if !strings.Contains(err.Error(), "outside the project root") {
+					t.Errorf("expected error to mention path traversal, got: %v", err)
+				}
+			} else if err != nil {
+				t.Fatalf("unexpected error for path %q: %v", tt.path, err)
+			}
+			// 任何情况下，都不允许在项目根之外创建文件
+			if _, statErr := os.Stat(filepath.Join(parentDir, "outside")); statErr == nil {
+				t.Errorf("file should not be created outside project root for path %q", tt.path)
+			}
+		})
 	}
 }
 

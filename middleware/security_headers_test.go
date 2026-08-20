@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,39 @@ func TestSecurityHeaders(t *testing.T) {
 	}
 	if headers.Get("Cross-Origin-Opener-Policy") != "same-origin" {
 		t.Fatalf("unexpected COOP: %q", headers.Get("Cross-Origin-Opener-Policy"))
+	}
+	if headers.Get("Cross-Origin-Resource-Policy") != "same-origin" {
+		t.Fatalf("unexpected CORP: %q", headers.Get("Cross-Origin-Resource-Policy"))
+	}
+	if headers.Get("Permissions-Policy") != "camera=()" {
+		t.Fatalf("unexpected Permissions-Policy: %q", headers.Get("Permissions-Policy"))
+	}
+	if headers.Get("X-XSS-Protection") != "0" {
+		t.Fatalf("unexpected X-XSS-Protection: %q", headers.Get("X-XSS-Protection"))
+	}
+	if headers.Get("Referrer-Policy") != "strict-origin-when-cross-origin" {
+		t.Fatalf("unexpected Referrer-Policy: %q", headers.Get("Referrer-Policy"))
+	}
+}
+
+func TestGenerateCSPNonce(t *testing.T) {
+	a, err := GenerateCSPNonce()
+	if err != nil {
+		t.Fatalf("generate nonce: %v", err)
+	}
+	b, err := GenerateCSPNonce()
+	if err != nil {
+		t.Fatalf("generate nonce: %v", err)
+	}
+	// 16 字节随机数经 base64url 编码：固定 22 字符、无填充
+	if a == "" || len(a) != 22 {
+		t.Fatalf("unexpected nonce length: %d", len(a))
+	}
+	if a == b {
+		t.Fatal("expected distinct nonces")
+	}
+	if strings.ContainsAny(a, "+/=") {
+		t.Fatalf("nonce contains non-urlsafe chars: %q", a)
 	}
 }
 

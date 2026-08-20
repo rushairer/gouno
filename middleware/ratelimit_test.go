@@ -242,6 +242,88 @@ func TestRateLimiterSetMaxVisitors(t *testing.T) {
 	assert.False(t, limiter.IsAllowed("10.0.1.1"))
 }
 
+func TestRateLimiterPanicsOnInvalidParams(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	assert.Panics(t, func() {
+		middleware.NewRateLimiter(ctx, 0, time.Minute)
+	}, "limit <= 0 should panic")
+
+	assert.Panics(t, func() {
+		middleware.NewRateLimiter(ctx, 10, 0)
+	}, "window <= 0 should panic")
+
+	assert.Panics(t, func() {
+		middleware.NewRateLimiter(ctx, -1, -time.Minute)
+	}, "negative params should panic")
+}
+
+func TestRateLimiterGetResetTime(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limiter := middleware.NewRateLimiter(ctx, 5, time.Minute)
+	ip := "192.168.1.1"
+
+	// 未知 IP：重置时间接近当前时间
+	before := time.Now().Add(-time.Second)
+	reset := limiter.GetResetTime(ip)
+	if reset.Before(before) || reset.After(time.Now().Add(time.Second)) {
+		t.Fatalf("unknown IP should reset ~now, got %v", reset)
+	}
+
+	// 发起一次请求后：重置时间 = 首次请求 + 窗口
+	start := time.Now()
+	if !limiter.IsAllowed(ip) {
+		t.Fatal("expected request to be allowed")
+	}
+	reset = limiter.GetResetTime(ip)
+	expected := start.Add(time.Minute)
+	if reset.Before(expected.Add(-2*time.Second)) || reset.After(expected.Add(2*time.Second)) {
+		t.Fatalf("expected reset ~%v, got %v", expected, reset)
+	}
+}
+
+func TestRateLimiterGetResetTimeAfterWindowExpiry(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limiter := middleware.NewRateLimiter(ctx, 2, 80*time.Millisecond)
+	ip := "192.168.1.1"
+	assert.True(t, limiter.IsAllowed(ip))
+	assert.True(t, limiter.IsAllowed(ip))
+
+	// 窗口过期后，最早请求滑出窗口 → 重置时间回到"现在"
+	time.Sleep(120 * time.Millisecond)
+	before := time.Now().Add(-time.Second)
+	reset := limiter.GetResetTime(ip)
+	if reset.Before(before) || reset.After(time.Now().Add(time.Second)) {
+		t.Fatalf("reset time should return to ~now after window expiry, got %v", reset)
+	}
+}
+
+func TestIPRateLimitMiddleware(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	r := gin.New()
+	r.Use(middleware.IPRateLimitMiddleware(ctx))
+	r.GET("/test", func(c *gin.Context) {
+		c.Status(http.StatusOK)
+	})
+
+	req := httptest.NewRequest("GET", "/test", nil)
+	req.RemoteAddr = "192.168.1.1:12345"
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "60", w.Header().Get("X-RateLimit-Limit"))
+	assert.Equal(t, "59", w.Header().Get("X-RateLimit-Remaining"))
+}
+
 // 基准测试
 func BenchmarkRateLimiter(b *testing.B) {
 	ctx, cancel := context.WithCancel(context.Background())

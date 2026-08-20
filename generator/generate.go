@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/rushairer/gouno/utility"
 	"github.com/spf13/cobra"
@@ -35,7 +36,8 @@ func generateFile(cmd *cobra.Command, args []string, typeName, defaultPath strin
 	}
 	dir := filepath.Join(projectRoot, path)
 	// Prevent path traversal: the resolved directory must be under projectRoot.
-	if !filepath.HasPrefix(dir, projectRoot) {
+	rel, err := filepath.Rel(projectRoot, dir)
+	if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(os.PathSeparator)) {
 		return fmt.Errorf("path %q resolves outside the project root", path)
 	}
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
