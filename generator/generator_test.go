@@ -21,10 +21,10 @@ func executeCommandC(root *cobra.Command, args ...string) (c *cobra.Command, out
 	// 重置所有子命令的标志到默认值，防止跨测试状态污染
 	for _, subCmd := range root.Commands() {
 		if f := subCmd.Flag("path"); f != nil {
-			f.Value.Set(f.DefValue)
+			_ = f.Value.Set(f.DefValue)
 		}
 		if f := subCmd.Flag("force"); f != nil {
-			f.Value.Set(f.DefValue)
+			_ = f.Value.Set(f.DefValue)
 		}
 	}
 
@@ -46,8 +46,9 @@ func chdir(t *testing.T) string {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
-		os.Chdir(cwd)
-		os.RemoveAll(tmpDir)
+		if err := os.Chdir(cwd); err != nil {
+			t.Errorf("restore working directory: %v", err)
+		}
 	})
 	return tmpDir
 }
