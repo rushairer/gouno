@@ -6,16 +6,26 @@
 
 A **lightweight Go web project launcher**. Scaffolds project structure, startup flow, web layer, and response format — the boilerplate you'd rewrite for every microservice — so you can focus on business logic from the first line.
 
-gouno is **not a framework**. It doesn't bundle a database driver, cache client, or message queue. Your tech stack is your choice. gouno handles the rest.
+gouno is **not a full-stack framework**. It doesn't bundle a database driver,
+cache client, or message queue. It provides reusable project, HTTP, response,
+JWT/JWKS verification, CSRF, and security-header primitives while applications
+retain responsibility for their authorization policy and infrastructure choices.
 
 ```
 What gouno does                    What gouno doesn't do
 ├── Project structure (DDD)        ├── Database (pgx? gorm? ent?)
 ├── CLI + config (Cobra + Viper)   ├── Cache (redis? memcached?)
 ├── Web engine (Gin + middleware)   ├── Messaging (kafka? rabbitmq?)
-├── Response format (unified JSON)  └── Auth (JWT? OAuth? session?)
+├── Response format (unified JSON)  ├── Identity provider / login UI
+├── Auth + middleware primitives    └── Application authorization policy
 └── Code generator + templates
 ```
+
+## Supported Go versions
+
+gouno v1.2.0 requires Go 1.25 or newer. Each new minor release may raise the
+minimum Go version. CI covers the latest security patch of the current and
+previous stable Go series; applications should keep their patch release current.
 
 ## Quick Start
 
@@ -71,3 +81,6 @@ your business code    → Implements: actual product logic
 
 MIT License.
 
+Security reports should follow [SECURITY.md](./SECURITY.md). Contributions and
+release policy are documented in [CONTRIBUTING.md](./CONTRIBUTING.md) and
+[RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md).
