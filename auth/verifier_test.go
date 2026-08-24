@@ -349,8 +349,8 @@ func TestVerifierFiltersNonRS256Keys(t *testing.T) {
 		Use: "sig",
 		Alg: "RS512",
 		Kid: "test-kid",
-		N:   base64.RawURLEncoding.EncodeToString(key.PublicKey.N.Bytes()),
-		E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key.PublicKey.E)),
+		N:   base64.RawURLEncoding.EncodeToString(key.N.Bytes()),
+		E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key.E)),
 	}}}
 	body, err := json.Marshal(jwks)
 	if err != nil {

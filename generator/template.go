@@ -99,4 +99,3 @@ func loadTemplate(typeName string) (string, error) {
 	}
 	return "", fmt.Errorf("unknown template type: %s", typeName)
 }
-

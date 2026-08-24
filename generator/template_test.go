@@ -29,4 +29,3 @@ func TestLoadTemplateUnknownType(t *testing.T) {
 		t.Fatalf("expected 'unknown template type' error, got: %v", err)
 	}
 }
-

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [1.2.0-rc.1] - 2026-08-24
+
+### Changed
+- Require Go 1.25 or newer and test the latest security patch of the current and previous stable Go series.
+- Document the JWT/JWKS, CSRF, and security-header primitives as supported public capabilities.
+
+### Security
+- Upgrade `golang.org/x/text` to 0.39.0 and `quic-go` to 0.59.1 to address reachable denial-of-service and memory-exhaustion advisories.
+
 ## [1.1.0] - 2026-08-20
 
 ### Changed
