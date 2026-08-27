@@ -416,3 +416,139 @@ func TestGetPublicKeyNotFound(t *testing.T) {
 		t.Fatal("expected error for unknown kid")
 	}
 }
+
+func TestVerifierRejectsMissingClientIDWhenConfigured(t *testing.T) {
+	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatalf("generate key: %v", err)
+	}
+	verifier := newVerifier(t, &key.PublicKey)
+
+	// Token without azp or client_id claims should fail when ClientID is configured
+	claims := jwt.MapClaims{
+		"sub": "user-1",
+		"iss": "https://issuer",
+		"aud": "blog-spa",
+		"exp": time.Now().Add(time.Hour).Unix(),
+	}
+	token := signToken(t, key, claims)
+
+	if _, err := verifier.Verify(token, Options{Issuer: "https://issuer", Audience: "blog-spa", ClientID: "blog-spa"}); err == nil {
+		t.Fatal("expected token without azp/client_id to be rejected when ClientID is configured")
+	}
+}
+
+func TestVerifierRejectsNonRS256Algorithms(t *testing.T) {
+	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatalf("generate key: %v", err)
+	}
+
+	jwks := JWKS{Keys: []JWK{
+		{
+			Kty: "RSA",
+			Use: "sig",
+			Alg: "RS256",
+			Kid: "test-kid",
+			N:   base64.RawURLEncoding.EncodeToString(key.PublicKey.N.Bytes()),
+			E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key.PublicKey.E)),
+		},
+	}}
+	body, err := json.Marshal(jwks)
+	if err != nil {
+		t.Fatalf("marshal jwks: %v", err)
+	}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write(body)
+	}))
+	t.Cleanup(server.Close)
+	verifier := NewVerifier(server.URL)
+
+	// Signing with RS384 instead of RS256 must be rejected
+	claims := jwt.MapClaims{
+		"sub": "user-1",
+		"exp": time.Now().Add(time.Hour).Unix(),
+	}
+	token384 := jwt.NewWithClaims(jwt.SigningMethodRS384, claims)
+	token384.Header["kid"] = "test-kid"
+	signed384, err := token384.SignedString(key)
+	if err != nil {
+		t.Fatalf("sign token: %v", err)
+	}
+
+	if _, err := verifier.Verify(signed384, Options{}); err == nil {
+		t.Fatal("expected RS384 token to be rejected by verifier configured for RS256")
+	}
+}
+
+func TestVerifierKeyRotation(t *testing.T) {
+	key1, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatalf("generate key1: %v", err)
+	}
+	key2, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatalf("generate key2: %v", err)
+	}
+
+	var mu sync.Mutex
+	currentKeys := []JWK{
+		{
+			Kty: "RSA",
+			Use: "sig",
+			Alg: "RS256",
+			Kid: "key-1",
+			N:   base64.RawURLEncoding.EncodeToString(key1.PublicKey.N.Bytes()),
+			E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key1.PublicKey.E)),
+		},
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		mu.Lock()
+		jwks := JWKS{Keys: currentKeys}
+		mu.Unlock()
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(jwks)
+	}))
+	defer server.Close()
+
+	verifier := &Verifier{
+		jwksURL: server.URL,
+		keys:    make(map[string]*rsa.PublicKey),
+	}
+
+	// Verify token signed with key-1
+	claims1 := jwt.MapClaims{"sub": "user-1", "exp": time.Now().Add(time.Hour).Unix()}
+	token1 := jwt.NewWithClaims(jwt.SigningMethodRS256, claims1)
+	token1.Header["kid"] = "key-1"
+	signed1, _ := token1.SignedString(key1)
+	if _, err := verifier.Verify(signed1, Options{}); err != nil {
+		t.Fatalf("verify with key-1 failed: %v", err)
+	}
+
+	// Rotate keys: add key-2 to server JWKS
+	mu.Lock()
+	currentKeys = append(currentKeys, JWK{
+		Kty: "RSA",
+		Use: "sig",
+		Alg: "RS256",
+		Kid: "key-2",
+		N:   base64.RawURLEncoding.EncodeToString(key2.PublicKey.N.Bytes()),
+		E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key2.PublicKey.E)),
+	})
+	mu.Unlock()
+
+	// Advance lastRefreshed to allow rotation refresh
+	verifier.mu.Lock()
+	verifier.lastRefreshed = time.Now().Add(-5 * time.Second)
+	verifier.mu.Unlock()
+
+	claims2 := jwt.MapClaims{"sub": "user-2", "exp": time.Now().Add(time.Hour).Unix()}
+	token2 := jwt.NewWithClaims(jwt.SigningMethodRS256, claims2)
+	token2.Header["kid"] = "key-2"
+	signed2, _ := token2.SignedString(key2)
+	if _, err := verifier.Verify(signed2, Options{}); err != nil {
+		t.Fatalf("verify with rotated key-2 failed: %v", err)
+	}
+}

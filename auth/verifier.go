@@ -83,7 +83,7 @@ func (v *Verifier) Verify(tokenStr string, options Options) (jwt.MapClaims, erro
 	}
 
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+		if token.Method.Alg() != "RS256" {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		kid, _ := token.Header["kid"].(string)
@@ -99,10 +99,15 @@ func (v *Verifier) Verify(tokenStr string, options Options) (jwt.MapClaims, erro
 	}
 
 	if options.ClientID != "" {
-		if azp, _ := claims["azp"].(string); azp != "" && azp != options.ClientID {
+		azp, _ := claims["azp"].(string)
+		clientID, _ := claims["client_id"].(string)
+		if azp == "" && clientID == "" {
+			return nil, fmt.Errorf("missing client identifier claims")
+		}
+		if azp != "" && azp != options.ClientID {
 			return nil, fmt.Errorf("invalid authorized party")
 		}
-		if clientID, _ := claims["client_id"].(string); clientID != "" && clientID != options.ClientID {
+		if clientID != "" && clientID != options.ClientID {
 			return nil, fmt.Errorf("invalid client")
 		}
 	}
@@ -133,13 +138,15 @@ func (v *Verifier) GetPublicKey(kid string) (*rsa.PublicKey, error) {
 	return nil, fmt.Errorf("public key not found for kid: %s", kid)
 }
 
+const jwksRefreshCooldown = 3 * time.Second
+
 func (v *Verifier) refreshKeys() error {
 	v.mu.RLock()
 	lastRefreshed := v.lastRefreshed
 	v.mu.RUnlock()
 
-	// 1 minute cooldown to prevent cache stampede / DoS spamming.
-	if time.Since(lastRefreshed) < time.Minute {
+	// Short cooldown to prevent unbounded DoS spamming while allowing key rotation.
+	if time.Since(lastRefreshed) < jwksRefreshCooldown {
 		return nil
 	}
 
@@ -147,7 +154,7 @@ func (v *Verifier) refreshKeys() error {
 		v.mu.RLock()
 		lastRefreshedInner := v.lastRefreshed
 		v.mu.RUnlock()
-		if time.Since(lastRefreshedInner) < time.Minute {
+		if time.Since(lastRefreshedInner) < jwksRefreshCooldown {
 			return nil, nil
 		}
 
