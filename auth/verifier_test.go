@@ -450,8 +450,8 @@ func TestVerifierRejectsNonRS256Algorithms(t *testing.T) {
 			Use: "sig",
 			Alg: "RS256",
 			Kid: "test-kid",
-			N:   base64.RawURLEncoding.EncodeToString(key.PublicKey.N.Bytes()),
-			E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key.PublicKey.E)),
+			N:   base64.RawURLEncoding.EncodeToString(key.N.Bytes()),
+			E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key.E)),
 		},
 	}}
 	body, err := json.Marshal(jwks)
@@ -499,8 +499,8 @@ func TestVerifierKeyRotation(t *testing.T) {
 			Use: "sig",
 			Alg: "RS256",
 			Kid: "key-1",
-			N:   base64.RawURLEncoding.EncodeToString(key1.PublicKey.N.Bytes()),
-			E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key1.PublicKey.E)),
+			N:   base64.RawURLEncoding.EncodeToString(key1.N.Bytes()),
+			E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key1.E)),
 		},
 	}
 
@@ -534,8 +534,8 @@ func TestVerifierKeyRotation(t *testing.T) {
 		Use: "sig",
 		Alg: "RS256",
 		Kid: "key-2",
-		N:   base64.RawURLEncoding.EncodeToString(key2.PublicKey.N.Bytes()),
-		E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key2.PublicKey.E)),
+		N:   base64.RawURLEncoding.EncodeToString(key2.N.Bytes()),
+		E:   base64.RawURLEncoding.EncodeToString(bigEndianIntBytes(key2.E)),
 	})
 	mu.Unlock()
 

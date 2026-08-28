@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-08-28
+
+### Fixed
+- Reduce the JWKS refresh cooldown so resource servers can accept newly rotated signing keys promptly while retaining single-flight request coalescing.
+
+### Security
+- Restrict access-token verification to RS256 instead of accepting other RSA signing algorithms.
+- Require a matching `azp` or `client_id` claim whenever resource servers configure a client identifier.
+
 ## [1.2.0] - 2026-08-24
 
 ### Changed
