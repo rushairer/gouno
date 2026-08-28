@@ -4,9 +4,16 @@ import "net/http"
 
 // Response represents a unified JSON API response with a status code, message, and optional data.
 type Response struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Data    any    `json:"data,omitempty"`
+	Code      int    `json:"code"`
+	Message   string `json:"message"`
+	Data      any    `json:"data,omitempty"`
+	RequestID string `json:"request_id,omitempty"`
+}
+
+// WithRequestID sets the request tracing identifier on the response and returns the response for chaining.
+func (r *Response) WithRequestID(reqID string) *Response {
+	r.RequestID = reqID
+	return r
 }
 
 // NewResponse creates a new Response with the given HTTP status code, message, and optional data.

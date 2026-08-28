@@ -221,8 +221,41 @@ func TestResponseJSON(t *testing.T) {
 		if err := json.Unmarshal([]byte(`{}`), &resp); err != nil {
 			t.Fatalf("json.Unmarshal failed: %v", err)
 		}
-		if resp.Code != 0 || resp.Message != "" || resp.Data != nil {
+		if resp.Code != 0 || resp.Message != "" || resp.Data != nil || resp.RequestID != "" {
 			t.Errorf("expected zero-value Response, got %+v", resp)
+		}
+	})
+
+	t.Run("response with request_id", func(t *testing.T) {
+		resp := gouno.NewErrorResponse(http.StatusBadRequest, "bad request").WithRequestID("req-12345")
+		if resp.RequestID != "req-12345" {
+			t.Errorf("RequestID = %q; want req-12345", resp.RequestID)
+		}
+		b, err := json.Marshal(resp)
+		if err != nil {
+			t.Fatalf("json.Marshal failed: %v", err)
+		}
+		var m map[string]any
+		if err := json.Unmarshal(b, &m); err != nil {
+			t.Fatalf("json.Unmarshal failed: %v", err)
+		}
+		if m["request_id"] != "req-12345" {
+			t.Errorf("m[request_id] = %v; want req-12345", m["request_id"])
+		}
+	})
+
+	t.Run("response without request_id omits field", func(t *testing.T) {
+		resp := gouno.NewErrorResponse(http.StatusBadRequest, "bad request")
+		b, err := json.Marshal(resp)
+		if err != nil {
+			t.Fatalf("json.Marshal failed: %v", err)
+		}
+		var m map[string]any
+		if err := json.Unmarshal(b, &m); err != nil {
+			t.Fatalf("json.Unmarshal failed: %v", err)
+		}
+		if _, exists := m["request_id"]; exists {
+			t.Error("request_id field should be omitted when empty")
 		}
 	})
 }

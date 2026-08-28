@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-08-28
+
+### Added
+- Add `RequestID` field and `WithRequestID` method on `Response` to support request tracing in JSON API responses.
+
 ## [1.2.1] - 2026-08-28
 
 ### Fixed
