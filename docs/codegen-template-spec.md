@@ -29,9 +29,9 @@ Example:
 ```yaml
 schema: gouno.dev/codegen/v1
 command:
-  use: generator
+  use: gen
   short: Generate project code
-  aliases: [gen]
+  aliases: [generator]
 
 generators:
   - name: service
@@ -52,15 +52,15 @@ generators:
         default: false
         description: force overwrite
     outputs:
-      - template: .gouno/templates/service.tmpl
+      - template: .gouno/codegen/service.tmpl
         path: '{{ flag "path" }}/{{ arg "name" }}.go'
 ```
 
 The resulting command is defined by the template, not by Gouno:
 
 ```text
-generator service [name] --path internal/service --force
-# alias: gen service [name]
+gen service [name] --path internal/service --force
+# alias: generator service [name]
 ```
 
 ## Generator fields
@@ -144,12 +144,14 @@ Recommended layout:
 ```text
 .gouno/
   codegen.yaml
-  templates/
+  codegen/
     controller.tmpl
     domain.tmpl
     repository.tmpl
     service.tmpl
     task.tmpl
 ```
+
+The `.gouno/codegen/` subtree is runtime template data. Project-bootstrap renderers should copy it verbatim so its own Go-template expressions remain intact.
 
 Gouno does not assign meaning to names such as `domain`, `service`, `handler`, or `usecase`. Those are template policy.
