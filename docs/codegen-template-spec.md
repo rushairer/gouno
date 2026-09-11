@@ -1,5 +1,12 @@
 # Gouno Template Codegen Specification v1
 
+> Status: **Stable / Normative**  
+> Schema: `gouno.dev/codegen/v1`  
+> Introduced: `gouno v1.3.0`  
+> Authority: `rushairer/gouno`
+
+This document is the normative contract for Gouno Codegen v1. User guides and reference templates may explain or demonstrate this contract, but must not redefine it. If implementation and this specification disagree, treat the mismatch as a compatibility defect that must be resolved explicitly rather than silently changing v1 semantics.
+
 Gouno owns the code-generation protocol and runtime. A project template owns the generator catalog, CLI shape, paths, and source templates.
 
 This keeps Gouno project-aware without making Gouno opinionated about DDD, Clean Architecture, handlers, repositories, or any other application structure.
