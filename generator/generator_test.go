@@ -11,405 +11,206 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func executeCommandC(root *cobra.Command, args ...string) (c *cobra.Command, output string, err error) {
-	buf := new(bytes.Buffer)
-	root.SetOut(buf)
-	root.SetErr(buf)
-	root.SetArgs(args)
-	c, err = root.ExecuteC()
+const testManifest = `schema: gouno.dev/codegen/v1
+command:
+  use: generator
+  short: Generate project code
+  aliases: [gen]
+generators:
+  - name: domain
+    aliases: [d]
+    short: Generate domain
+    args:
+      - name: name
+        required: true
+    flags:
+      - name: path
+        shorthand: p
+        type: string
+        default: internal/domain
+        description: path to domain
+      - name: force
+        shorthand: f
+        type: bool
+        default: false
+        description: force overwrite
+    outputs:
+      - template: .gouno/templates/domain.tmpl
+        path: '{{ flag "path" }}/{{ arg "name" }}.go'
+  - name: service
+    aliases: [s]
+    short: Generate service
+    args:
+      - name: name
+        required: true
+    flags:
+      - name: path
+        shorthand: p
+        type: string
+        default: internal/service
+        description: path to service
+      - name: force
+        shorthand: f
+        type: bool
+        default: false
+        description: force overwrite
+    outputs:
+      - template: .gouno/templates/service.tmpl
+        path: '{{ flag "path" }}/{{ arg "name" }}.go'
+  - name: suite
+    short: Generate domain and service
+    args:
+      - name: name
+        required: true
+    flags:
+      - name: force
+        shorthand: f
+        type: bool
+        default: false
+        description: force overwrite
+    compose: [domain, service]
+`
 
-	// 重置所有子命令的标志到默认值，防止跨测试状态污染
-	for _, subCmd := range root.Commands() {
-		if f := subCmd.Flag("path"); f != nil {
-			_ = f.Value.Set(f.DefValue)
-		}
-		if f := subCmd.Flag("force"); f != nil {
-			_ = f.Value.Set(f.DefValue)
-		}
+func writeFile(t *testing.T, path, content string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatal(err)
 	}
-
-	return c, buf.String(), err
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
 }
 
-// chdir 切换到临时目录作为工作目录，测试结束后自动还原并清理
-func chdir(t *testing.T) string {
+func writeProject(t *testing.T) string {
 	t.Helper()
-	tmpDir, err := filepath.Abs(t.TempDir())
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, ".gouno", "codegen.yaml"), testManifest)
+	writeFile(t, filepath.Join(root, ".gouno", "templates", "domain.tmpl"), "package domain\n\ntype {{ camel (arg \"name\") }} struct{}\n")
+	writeFile(t, filepath.Join(root, ".gouno", "templates", "service.tmpl"), "package service\n\ntype {{ camel (arg \"name\") }}Service struct{}\n")
+	return root
+}
+
+func execute(t *testing.T, cmd *cobra.Command, args ...string) (string, error) {
+	t.Helper()
+	var output bytes.Buffer
+	cmd.SetOut(&output)
+	cmd.SetErr(&output)
+	cmd.SetArgs(args)
+	_, err := cmd.ExecuteC()
+	return output.String(), err
+}
+
+func TestAttachProjectCommandIsCapabilityDriven(t *testing.T) {
+	root := &cobra.Command{Use: "app"}
+	attached, err := generator.AttachProjectCommand(root, t.TempDir())
 	if err != nil {
 		t.Fatal(err)
 	}
-	cwd, err := os.Getwd()
+	if attached || len(root.Commands()) != 0 {
+		t.Fatal("codegen command must be absent without a manifest")
+	}
+
+	root = &cobra.Command{Use: "app"}
+	attached, err = generator.AttachProjectCommand(root, writeProject(t))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.Chdir(tmpDir); err != nil {
+	if !attached {
+		t.Fatal("expected template codegen capability to attach")
+	}
+	cmd, _, err := root.Find([]string{"gen"})
+	if err != nil || cmd == root {
+		t.Fatalf("expected template-defined gen alias, cmd=%v err=%v", cmd, err)
+	}
+}
+
+func TestTemplateDefinedGeneratorRendersAndFormats(t *testing.T) {
+	project := writeProject(t)
+	cmd, err := generator.LoadProjectCommand(project)
+	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() {
-		if err := os.Chdir(cwd); err != nil {
-			t.Errorf("restore working directory: %v", err)
-		}
-	})
-	return tmpDir
-}
-
-func TestGeneratorService(t *testing.T) {
-	tmpDir := chdir(t)
-
-	t.Run("default path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo_bar")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "internal", "service", "foo_bar.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package service")
-		assertFileContains(t, filePath, "FooBarService")
-	})
-
-	t.Run("force overwrite", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo_bar", "--force")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "service", "foo_bar.go"))
-	})
-
-	t.Run("custom path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo_bar", "--path", "./custom/service")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "custom", "service", "foo_bar.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package service")
-	})
-}
-
-func TestGeneratorDomain(t *testing.T) {
-	tmpDir := chdir(t)
-
-	t.Run("default path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "domain", "foo")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "internal", "domain", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package domain")
-	})
-
-	t.Run("force overwrite", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "domain", "foo", "--force")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "domain", "foo.go"))
-	})
-
-	t.Run("custom path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "domain", "foo", "--path", "./custom/domain")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "custom", "domain", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package domain")
-	})
-}
-
-func TestGeneratorRepository(t *testing.T) {
-	tmpDir := chdir(t)
-
-	t.Run("default path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "repository", "foo")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "internal", "repository", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package repository")
-		assertFileContains(t, filePath, "FooRepository")
-	})
-
-	t.Run("force overwrite", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "repository", "foo", "--force")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "repository", "foo.go"))
-	})
-
-	t.Run("custom path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "repository", "foo", "--path", "./custom/repository")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "custom", "repository", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package repository")
-	})
-}
-
-func TestGeneratorTask(t *testing.T) {
-	tmpDir := chdir(t)
-
-	t.Run("default path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "task", "foo")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "internal", "task", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package task")
-		assertFileContains(t, filePath, "FooTask")
-	})
-
-	t.Run("force overwrite", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "task", "foo", "--force")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "task", "foo.go"))
-	})
-
-	t.Run("custom path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "task", "foo", "--path", "./custom/task")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "custom", "task", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package task")
-	})
-}
-
-func TestGeneratorController(t *testing.T) {
-	tmpDir := chdir(t)
-
-	t.Run("default path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "controller", "foo")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "internal", "controller", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package controller")
-		assertFileContains(t, filePath, "FooController")
-	})
-
-	t.Run("force overwrite", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "controller", "foo", "--force")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "controller", "foo.go"))
-	})
-
-	t.Run("custom path", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "controller", "foo", "--path", "./custom/controller")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		filePath := filepath.Join(tmpDir, "custom", "controller", "foo.go")
-		assertFileExists(t, filePath)
-		assertFileContains(t, filePath, "package controller")
-	})
-}
-
-func TestGeneratorSuite(t *testing.T) {
-	tmpDir := chdir(t)
-
-	t.Run("generates domain, repository and service", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "suite", "foo")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-
-		domainPath := filepath.Join(tmpDir, "internal", "domain", "foo.go")
-		assertFileExists(t, domainPath)
-		assertFileContains(t, domainPath, "package domain")
-
-		repositoryPath := filepath.Join(tmpDir, "internal", "repository", "foo.go")
-		assertFileExists(t, repositoryPath)
-		assertFileContains(t, repositoryPath, "package repository")
-
-		servicePath := filepath.Join(tmpDir, "internal", "service", "foo.go")
-		assertFileExists(t, servicePath)
-		assertFileContains(t, servicePath, "package service")
-	})
-
-	t.Run("force overwrite", func(t *testing.T) {
-		_, _, err := executeCommandC(generator.GeneratorCmd, "suite", "foo", "--force")
-		if err != nil {
-			t.Fatalf("command failed: %v", err)
-		}
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "domain", "foo.go"))
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "repository", "foo.go"))
-		assertFileExists(t, filepath.Join(tmpDir, "internal", "service", "foo.go"))
-	})
-}
-
-func TestGeneratorAliases(t *testing.T) {
-	tmpDir := chdir(t)
-
-	// 每个别名对应的实际路径（与 defaultPath 一致）
-	paths := map[string]string{
-		"c": filepath.Join("internal", "controller", "foo.go"),
-		"d": filepath.Join("internal", "domain", "foo.go"),
-		"r": filepath.Join("internal", "repository", "foo.go"),
-		"s": filepath.Join("internal", "service", "foo.go"),
-		"t": filepath.Join("internal", "task", "foo.go"),
+	if _, err := execute(t, cmd, "service", "foo_bar"); err != nil {
+		t.Fatal(err)
 	}
-	pkgNames := map[string]string{
-		"c": "package controller",
-		"d": "package domain",
-		"r": "package repository",
-		"s": "package service",
-		"t": "package task",
-	}
-
-	for alias, relPath := range paths {
-		t.Run(alias, func(t *testing.T) {
-			_, _, err := executeCommandC(generator.GeneratorCmd, alias, "foo")
-			if err != nil {
-				t.Fatalf("command %q failed: %v", alias, err)
-			}
-			assertFileContains(t, filepath.Join(tmpDir, relPath), pkgNames[alias])
-		})
-	}
-}
-
-func TestGeneratorNoArgs(t *testing.T) {
-	commands := []string{"service", "domain", "repository", "task", "controller"}
-	for _, name := range commands {
-		t.Run(name, func(t *testing.T) {
-			_, _, err := executeCommandC(generator.GeneratorCmd, name)
-			if err == nil {
-				t.Errorf("expected error for %q with no args, got nil", name)
-			}
-		})
-	}
-}
-
-func TestGeneratorCamelCaseConversion(t *testing.T) {
-	tmpDir := chdir(t)
-
-	tests := []struct {
-		input    string
-		expected string
-	}{
-		{"foo_bar", "FooBar"},
-		{"my_service", "MyService"},
-		{"simple", "Simple"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.input, func(t *testing.T) {
-			_, _, err := executeCommandC(generator.GeneratorCmd, "service", tt.input)
-			if err != nil {
-				t.Fatalf("command failed: %v", err)
-			}
-			filePath := filepath.Join(tmpDir, "internal", "service", tt.input+".go")
-			assertFileContains(t, filePath, tt.expected)
-		})
-	}
-}
-
-func TestGeneratorSkipExisting(t *testing.T) {
-	tmpDir := chdir(t)
-	filePath := filepath.Join(tmpDir, "internal", "service", "foo.go")
-
-	// 第一次创建文件
-	_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo")
+	content, err := os.ReadFile(filepath.Join(project, "internal", "service", "foo_bar.go"))
 	if err != nil {
-		t.Fatalf("command failed: %v", err)
+		t.Fatal(err)
 	}
-	assertFileExists(t, filePath)
-
-	// 记录文件修改时间
-	info1, err := os.Stat(filePath)
-	if err != nil {
-		t.Fatalf("failed to stat file: %v", err)
-	}
-
-	// 再次执行相同命令（不带 --force），文件应被跳过且内容不变
-	_, _, err = executeCommandC(generator.GeneratorCmd, "service", "foo")
-	if err != nil {
-		t.Fatalf("command failed: %v", err)
-	}
-	info2, err := os.Stat(filePath)
-	if err != nil {
-		t.Fatalf("failed to stat file: %v", err)
-	}
-	if !info1.ModTime().Equal(info2.ModTime()) {
-		t.Errorf("file should not be modified when skipped (modtime changed)")
-	}
-
-	// 带 --force 应覆盖
-	_, _, err = executeCommandC(generator.GeneratorCmd, "service", "foo", "--force")
-	if err != nil {
-		t.Fatalf("command failed: %v", err)
-	}
-	info3, err := os.Stat(filePath)
-	if err != nil {
-		t.Fatalf("failed to stat file: %v", err)
-	}
-	if info2.ModTime().Equal(info3.ModTime()) {
-		t.Errorf("file should be modified with --force (modtime unchanged)")
+	if !strings.Contains(string(content), "type FooBarService struct{}") {
+		t.Fatalf("unexpected generated content:\n%s", content)
 	}
 }
 
-func TestGeneratorPathTraversal(t *testing.T) {
-	tmpDir := chdir(t)
-	parentDir := filepath.Dir(tmpDir)
-
-	tests := []struct {
-		name    string
-		path    string
-		wantErr bool
-	}{
-		{"parent traversal", "../outside", true},
-		{"nested traversal", "./custom/../../outside", true},
-		// 绝对路径经 filepath.Join 会被降级为项目根内的子路径，不会越界，但也不允许写到外部
-		{"absolute path outside root", filepath.Join(parentDir, "outside"), false},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_, _, err := executeCommandC(generator.GeneratorCmd, "service", "foo", "--path", tt.path)
-			if tt.wantErr {
-				if err == nil {
-					t.Fatalf("expected error for path %q, got nil", tt.path)
-				}
-				if !strings.Contains(err.Error(), "outside the project root") {
-					t.Errorf("expected error to mention path traversal, got: %v", err)
-				}
-			} else if err != nil {
-				t.Fatalf("unexpected error for path %q: %v", tt.path, err)
-			}
-			// 任何情况下，都不允许在项目根之外创建文件
-			if _, statErr := os.Stat(filepath.Join(parentDir, "outside")); statErr == nil {
-				t.Errorf("file should not be created outside project root for path %q", tt.path)
-			}
-		})
-	}
-}
-
-func assertFileExists(t *testing.T, path string) {
-	t.Helper()
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		t.Errorf("expected file to exist: %s", path)
-	}
-}
-
-func assertFileContains(t *testing.T, path, substr string) {
-	t.Helper()
-	content, err := os.ReadFile(path)
+func TestTemplateDefinedCompositionAndForce(t *testing.T) {
+	project := writeProject(t)
+	cmd, err := generator.LoadProjectCommand(project)
 	if err != nil {
-		t.Fatalf("failed to read file %s: %v", path, err)
+		t.Fatal(err)
 	}
-	if !strings.Contains(string(content), substr) {
-		t.Errorf("file %s does not contain %q, got:\n%s", path, substr, string(content))
+	if _, err := execute(t, cmd, "suite", "account"); err != nil {
+		t.Fatal(err)
+	}
+	for _, rel := range []string{"internal/domain/account.go", "internal/service/account.go"} {
+		if _, err := os.Stat(filepath.Join(project, rel)); err != nil {
+			t.Fatalf("expected %s: %v", rel, err)
+		}
+	}
+
+	service := filepath.Join(project, "internal", "service", "account.go")
+	writeFile(t, service, "sentinel")
+	cmd, _ = generator.LoadProjectCommand(project)
+	if _, err := execute(t, cmd, "suite", "account", "--force"); err != nil {
+		t.Fatal(err)
+	}
+	content, _ := os.ReadFile(service)
+	if strings.Contains(string(content), "sentinel") {
+		t.Fatal("compose generator did not propagate force")
+	}
+}
+
+func TestManifestSearchesParents(t *testing.T) {
+	project := writeProject(t)
+	nested := filepath.Join(project, "internal", "service")
+	if err := os.MkdirAll(nested, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path, root, err := generator.FindManifest(nested)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if path != filepath.Join(project, ".gouno", "codegen.yaml") || root != project {
+		t.Fatalf("unexpected manifest lookup: path=%s root=%s", path, root)
+	}
+}
+
+func TestManifestRejectsCompositionCycle(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "codegen.yaml")
+	writeFile(t, path, `schema: gouno.dev/codegen/v1
+command:
+  use: generator
+generators:
+  - name: a
+    compose: [b]
+  - name: b
+    compose: [a]
+`)
+	_, err := generator.LoadManifest(path)
+	if err == nil || !strings.Contains(err.Error(), "cycle") {
+		t.Fatalf("expected cycle error, got %v", err)
+	}
+}
+
+func TestOutputTraversalIsRejected(t *testing.T) {
+	project := writeProject(t)
+	manifest := strings.Replace(testManifest, "internal/service", "../outside", 1)
+	writeFile(t, filepath.Join(project, ".gouno", "codegen.yaml"), manifest)
+	cmd, err := generator.LoadProjectCommand(project)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = execute(t, cmd, "service", "escape")
+	if err == nil || !strings.Contains(err.Error(), "outside the project root") {
+		t.Fatalf("expected traversal error, got %v", err)
 	}
 }
