@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-11
+
 ### Added
 - Add Template Codegen Specification v1 (`gouno.dev/codegen/v1`).
 - Add project-aware codegen manifest discovery, validation, dynamic Cobra command construction, declarative render outputs, generator composition, safe path enforcement, and automatic Go formatting.
