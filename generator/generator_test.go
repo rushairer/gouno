@@ -13,9 +13,9 @@ import (
 
 const testManifest = `schema: gouno.dev/codegen/v1
 command:
-  use: generator
+  use: gen
   short: Generate project code
-  aliases: [gen]
+  aliases: [generator]
 generators:
   - name: domain
     aliases: [d]
@@ -35,7 +35,7 @@ generators:
         default: false
         description: force overwrite
     outputs:
-      - template: .gouno/templates/domain.tmpl
+      - template: .gouno/codegen/domain.tmpl
         path: '{{ flag "path" }}/{{ arg "name" }}.go'
   - name: service
     aliases: [s]
@@ -55,7 +55,7 @@ generators:
         default: false
         description: force overwrite
     outputs:
-      - template: .gouno/templates/service.tmpl
+      - template: .gouno/codegen/service.tmpl
         path: '{{ flag "path" }}/{{ arg "name" }}.go'
   - name: suite
     short: Generate domain and service
@@ -85,8 +85,8 @@ func writeProject(t *testing.T) string {
 	t.Helper()
 	root := t.TempDir()
 	writeFile(t, filepath.Join(root, ".gouno", "codegen.yaml"), testManifest)
-	writeFile(t, filepath.Join(root, ".gouno", "templates", "domain.tmpl"), "package domain\n\ntype {{ camel (arg \"name\") }} struct{}\n")
-	writeFile(t, filepath.Join(root, ".gouno", "templates", "service.tmpl"), "package service\n\ntype {{ camel (arg \"name\") }}Service struct{}\n")
+	writeFile(t, filepath.Join(root, ".gouno", "codegen", "domain.tmpl"), "package domain\n\ntype {{ camel (arg \"name\") }} struct{}\n")
+	writeFile(t, filepath.Join(root, ".gouno", "codegen", "service.tmpl"), "package service\n\ntype {{ camel (arg \"name\") }}Service struct{}\n")
 	return root
 }
 
@@ -120,7 +120,7 @@ func TestAttachProjectCommandIsCapabilityDriven(t *testing.T) {
 	}
 	cmd, _, err := root.Find([]string{"gen"})
 	if err != nil || cmd == root {
-		t.Fatalf("expected template-defined gen alias, cmd=%v err=%v", cmd, err)
+		t.Fatalf("expected template-defined gen command, cmd=%v err=%v", cmd, err)
 	}
 }
 
@@ -188,7 +188,7 @@ func TestManifestRejectsCompositionCycle(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "codegen.yaml")
 	writeFile(t, path, `schema: gouno.dev/codegen/v1
 command:
-  use: generator
+  use: gen
 generators:
   - name: a
     compose: [b]
