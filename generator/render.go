@@ -89,8 +89,8 @@ func renderString(name, source string, data templateData, funcs template.FuncMap
 
 func templateFuncs(inv invocation) template.FuncMap {
 	return template.FuncMap{
-		"arg": func(name string) string { return inv.args[name] },
-		"flag": func(name string) string { return stringify(inv.flags[name]) },
+		"arg":   func(name string) string { return inv.args[name] },
+		"flag":  func(name string) string { return stringify(inv.flags[name]) },
 		"camel": utility.ToCamelCase,
 		"snake": utility.ToSnakeCase,
 		"lower": strings.ToLower,
