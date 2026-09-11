@@ -2,6 +2,7 @@ package generator_test
 
 import (
 	"bytes"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -71,7 +72,22 @@ generators:
     compose: [domain, service]
 `
 
-func writeFile(t *testing.T, path, content string) {
+func writeTestProject(t *testing.T) string {
+	t.Helper()
+	root := t.TempDir()
+	mustWrite(t, filepath.Join(root, ".gouno", "codegen.yaml"), testManifest)
+	mustWrite(t, filepath.Join(root, ".gouno", "codegen", "domain.tmpl"), `package domain
+
+type {{ camel (arg "name") }} struct{}
+`)
+	mustWrite(t, filepath.Join(root, ".gouno", "codegen", "service.tmpl"), `package service
+
+type {{ camel (arg "name") }}Service struct{}
+`)
+	return root
+}
+
+func mustWrite(t *testing.T, path, content string) {
 	t.Helper()
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
@@ -79,15 +95,6 @@ func writeFile(t *testing.T, path, content string) {
 	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
 		t.Fatal(err)
 	}
-}
-
-func writeProject(t *testing.T) string {
-	t.Helper()
-	root := t.TempDir()
-	writeFile(t, filepath.Join(root, ".gouno", "codegen.yaml"), testManifest)
-	writeFile(t, filepath.Join(root, ".gouno", "codegen", "domain.tmpl"), "package domain\n\ntype {{ camel (arg \"name\") }} struct{}\n")
-	writeFile(t, filepath.Join(root, ".gouno", "codegen", "service.tmpl"), "package service\n\ntype {{ camel (arg \"name\") }}Service struct{}\n")
-	return root
 }
 
 func execute(t *testing.T, cmd *cobra.Command, args ...string) (string, error) {
@@ -100,40 +107,53 @@ func execute(t *testing.T, cmd *cobra.Command, args ...string) (string, error) {
 	return output.String(), err
 }
 
-func TestAttachProjectCommandIsCapabilityDriven(t *testing.T) {
-	root := &cobra.Command{Use: "app"}
-	attached, err := generator.AttachProjectCommand(root, t.TempDir())
+func TestLoadProjectCommandAbsent(t *testing.T) {
+	cmd, err := generator.LoadProjectCommand(t.TempDir())
+	if err != nil {
+		t.Fatalf("LoadProjectCommand returned error: %v", err)
+	}
+	if cmd != nil {
+		t.Fatal("expected no codegen command when manifest is absent")
+	}
+}
+
+func TestAttachProjectCommandShapesRootCLI(t *testing.T) {
+	withoutGen := &cobra.Command{Use: "app"}
+	attached, err := generator.AttachProjectCommand(withoutGen, t.TempDir())
 	if err != nil {
 		t.Fatal(err)
 	}
-	if attached || len(root.Commands()) != 0 {
-		t.Fatal("codegen command must be absent without a manifest")
+	if attached || len(withoutGen.Commands()) != 0 {
+		t.Fatal("gen command must not appear when template provides no manifest")
 	}
 
-	root = &cobra.Command{Use: "app"}
-	attached, err = generator.AttachProjectCommand(root, writeProject(t))
+	rootDir := writeTestProject(t)
+	withGen := &cobra.Command{Use: "app"}
+	attached, err = generator.AttachProjectCommand(withGen, rootDir)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if !attached {
-		t.Fatal("expected template codegen capability to attach")
+		t.Fatal("expected codegen capability to attach")
 	}
-	cmd, _, err := root.Find([]string{"gen"})
-	if err != nil || cmd == root {
+	cmd, _, err := withGen.Find([]string{"gen"})
+	if err != nil || cmd == withGen {
 		t.Fatalf("expected template-defined gen command, cmd=%v err=%v", cmd, err)
 	}
 }
 
 func TestTemplateDefinedGeneratorRendersAndFormats(t *testing.T) {
-	project := writeProject(t)
-	cmd, err := generator.LoadProjectCommand(project)
+	rootDir := writeTestProject(t)
+	cmd, err := generator.LoadProjectCommand(rootDir)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := execute(t, cmd, "service", "foo_bar"); err != nil {
-		t.Fatal(err)
+	output, err := execute(t, cmd, "service", "foo_bar")
+	if err != nil {
+		t.Fatalf("execute generator: %v\n%s", err, output)
 	}
-	content, err := os.ReadFile(filepath.Join(project, "internal", "service", "foo_bar.go"))
+	generated := filepath.Join(rootDir, "internal", "service", "foo_bar.go")
+	content, err := os.ReadFile(generated)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,51 +162,78 @@ func TestTemplateDefinedGeneratorRendersAndFormats(t *testing.T) {
 	}
 }
 
-func TestTemplateDefinedCompositionAndForce(t *testing.T) {
-	project := writeProject(t)
-	cmd, err := generator.LoadProjectCommand(project)
+func TestTemplateDefinedPathFlagAndOverwritePolicy(t *testing.T) {
+	rootDir := writeTestProject(t)
+	cmd, err := generator.LoadProjectCommand(rootDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := execute(t, cmd, "service", "user", "--path", "custom/services"); err != nil {
+		t.Fatal(err)
+	}
+	generated := filepath.Join(rootDir, "custom", "services", "user.go")
+	mustWrite(t, generated, "sentinel")
+
+	cmd, _ = generator.LoadProjectCommand(rootDir)
+	output, err := execute(t, cmd, "service", "user", "--path", "custom/services")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(output, "already exists, skipping") {
+		t.Fatalf("expected skip message, got %q", output)
+	}
+	content, _ := os.ReadFile(generated)
+	if string(content) != "sentinel" {
+		t.Fatalf("existing file changed without force: %q", content)
+	}
+
+	cmd, _ = generator.LoadProjectCommand(rootDir)
+	if _, err := execute(t, cmd, "service", "user", "--path", "custom/services", "--force"); err != nil {
+		t.Fatal(err)
+	}
+	content, _ = os.ReadFile(generated)
+	if strings.Contains(string(content), "sentinel") {
+		t.Fatal("force did not overwrite existing file")
+	}
+}
+
+func TestComposeGeneratorUsesTemplatePolicy(t *testing.T) {
+	rootDir := writeTestProject(t)
+	cmd, err := generator.LoadProjectCommand(rootDir)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if _, err := execute(t, cmd, "suite", "account"); err != nil {
 		t.Fatal(err)
 	}
-	for _, rel := range []string{"internal/domain/account.go", "internal/service/account.go"} {
-		if _, err := os.Stat(filepath.Join(project, rel)); err != nil {
-			t.Fatalf("expected %s: %v", rel, err)
+	for _, path := range []string{
+		filepath.Join(rootDir, "internal", "domain", "account.go"),
+		filepath.Join(rootDir, "internal", "service", "account.go"),
+	} {
+		if _, err := os.Stat(path); err != nil {
+			t.Fatalf("expected generated file %s: %v", path, err)
 		}
-	}
-
-	service := filepath.Join(project, "internal", "service", "account.go")
-	writeFile(t, service, "sentinel")
-	cmd, _ = generator.LoadProjectCommand(project)
-	if _, err := execute(t, cmd, "suite", "account", "--force"); err != nil {
-		t.Fatal(err)
-	}
-	content, _ := os.ReadFile(service)
-	if strings.Contains(string(content), "sentinel") {
-		t.Fatal("compose generator did not propagate force")
 	}
 }
 
-func TestManifestSearchesParents(t *testing.T) {
-	project := writeProject(t)
-	nested := filepath.Join(project, "internal", "service")
+func TestFindManifestWalksUpFromNestedDirectory(t *testing.T) {
+	rootDir := writeTestProject(t)
+	nested := filepath.Join(rootDir, "internal", "service")
 	if err := os.MkdirAll(nested, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	path, root, err := generator.FindManifest(nested)
+	path, foundRoot, err := generator.FindManifest(nested)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if path != filepath.Join(project, ".gouno", "codegen.yaml") || root != project {
-		t.Fatalf("unexpected manifest lookup: path=%s root=%s", path, root)
+	if path != filepath.Join(rootDir, ".gouno", "codegen.yaml") || foundRoot != rootDir {
+		t.Fatalf("unexpected manifest lookup: path=%s root=%s", path, foundRoot)
 	}
 }
 
-func TestManifestRejectsCompositionCycle(t *testing.T) {
+func TestManifestValidationRejectsCompositionCycle(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "codegen.yaml")
-	writeFile(t, path, `schema: gouno.dev/codegen/v1
+	mustWrite(t, path, `schema: gouno.dev/codegen/v1
 command:
   use: gen
 generators:
@@ -197,20 +244,23 @@ generators:
 `)
 	_, err := generator.LoadManifest(path)
 	if err == nil || !strings.Contains(err.Error(), "cycle") {
-		t.Fatalf("expected cycle error, got %v", err)
+		t.Fatalf("expected cycle validation error, got %v", err)
 	}
 }
 
 func TestOutputTraversalIsRejected(t *testing.T) {
-	project := writeProject(t)
-	manifest := strings.Replace(testManifest, "internal/service", "../outside", 1)
-	writeFile(t, filepath.Join(project, ".gouno", "codegen.yaml"), manifest)
-	cmd, err := generator.LoadProjectCommand(project)
+	rootDir := writeTestProject(t)
+	manifestPath := filepath.Join(rootDir, ".gouno", "codegen.yaml")
+	mustWrite(t, manifestPath, strings.Replace(testManifest, "internal/service", "../outside", 1))
+	cmd, err := generator.LoadProjectCommand(rootDir)
 	if err != nil {
 		t.Fatal(err)
 	}
 	_, err = execute(t, cmd, "service", "escape")
 	if err == nil || !strings.Contains(err.Error(), "outside the project root") {
 		t.Fatalf("expected traversal error, got %v", err)
+	}
+	if _, statErr := os.Stat(filepath.Join(filepath.Dir(rootDir), "outside", "escape.go")); !errors.Is(statErr, os.ErrNotExist) {
+		t.Fatalf("unexpected file outside project root: %v", statErr)
 	}
 }
