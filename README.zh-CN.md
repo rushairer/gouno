@@ -4,70 +4,68 @@
 
 ---
 
-**轻量级 Go Web 项目启动器**。它为你搭建项目结构、启动流程、Web 层和响应格式——这些每个微服务都要写、但跟业务无关的代码——让你从第一行就专注业务逻辑。
+**轻量级 Go Web 项目启动器**。Gouno 提供可复用的启动、HTTP、响应、安全与项目工具机制；具体项目结构和开发约定由 Template 决定。
 
-gouno **不是框架**。它不绑定数据库驱动、缓存客户端或消息队列。技术选型由你决定，gouno 只负责其余部分。
+gouno **不是全栈框架**。它不规定数据库、缓存、消息队列、认证产品，也不规定业务项目必须采用 DDD、Clean Architecture 或某一种分层方式。
 
-```
-gouno 负责的                         gouno 不负责的
-├── 项目结构（DDD）                   ├── 数据库（pgx? gorm? ent?）
-├── CLI + 配置（Cobra + Viper）       ├── 缓存（redis? memcached?）
-├── Web 引擎（Gin + 中间件）          ├── 消息队列（kafka? rabbitmq?）
-├── 响应格式（统一 JSON）             └── 认证（JWT? OAuth? session?）
-└── 代码生成器 + 模板集
+```text
+Gouno 负责                          Template / 业务项目负责
+├── 可复用运行时基础能力             ├── 项目架构
+├── Codegen 协议与执行引擎            ├── Generator 清单与代码模板
+├── 安全的模板渲染                    ├── 数据库/缓存/消息队列选型
+├── 中间件与安全基础能力              ├── 认证实现
+└── 通用项目工具机制                  └── 应用/领域策略
 ```
 
 ## 快速开始
 
 ```bash
-# 安装
 go install github.com/rushairer/gouno-cli@latest
 
-# 创建、构建、运行
 gouno-cli new my-service -m github.com/you/my-service
-cd my-service && go mod tidy && make dev
-# → http://localhost:8080
+cd my-service && make dev
 ```
 
-## 代码生成
+## Template 定义代码生成
+
+代码生成属于 **Template Capability**，不再由 Gouno Core 内置某一套 DDD 代码结构。
+
+如果当前 Template 提供 `.gouno/codegen.yaml`，它可以定义：
 
 ```bash
-gouno gen suite user   # → domain + repository + service
+gouno gen suite user
 gouno gen task send_email
 gouno gen controller auth
 ```
 
-[完整指南 →](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/code-generation.md)
+另一个 Template 完全可以定义 `handler`、`usecase`、`module` 等不同命令；不需要代码生成的 Template 可以完全不提供 manifest，也就无需在项目 CLI 中出现 `gen`。
 
-## 文档
+Gouno 只负责 manifest 发现与校验、动态构建 CLI、参数/Flag 解析、安全渲染、Generator 组合、覆盖策略以及 Go 代码格式化。具体 Generator 名称、参数、输出目录和源码模板全部属于 Template 的开发规范。
 
-| 指南 | 说明 |
-|------|------|
-| [快速开始](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/getting-started.md) | 安装、创建项目、运行 |
-| [代码生成](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/code-generation.md) | 生成 DDD 模块 |
-| [配置管理](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/configuration.md) | 多环境 YAML 配置 |
-| [中间件](https://github.com/rushairer/gouno-doc/blob/main/zh-CN/middleware.md) | 内置中间件与自定义扩展 |
+详见 [Gouno Template Codegen Specification v1](./docs/codegen-template-spec.md)。
 
 ## 设计理念
 
-**gouno 是启动器，不是框架。** 它给你一个标准化的起点，然后让开。
+**Gouno 是启动器和项目工具宿主，不是业务框架。** Gouno 统一机制，Template 表达策略。
 
+```text
+gouno-cli           -> 从任意完整 Project Template 创建项目
+gouno               -> 提供可复用机制 + Template 驱动的项目工具协议
+Project Template    -> 项目初始代码 + 架构选择 + Codegen Policy
+业务项目             -> 产品与领域逻辑
 ```
-gouno（核心）         → 标准化：项目结构 + 启动流程 + Web 层 + 响应格式
-gouno-template        → 项目骨架：DDD 架构 + 配置 + Gin + Viper
-你的业务代码          → 实现：产品逻辑
-```
+
+生成后的项目可以按需依赖 Gouno 提供的运行时基础能力，但 Gouno 不拥有业务项目的架构观点。`domain`、`repository`、`service`、`controller`、`task`、`suite` 等名称都属于 Template 的词汇，而不是 Gouno Core 的固定概念。
 
 ## 相关项目
 
 | 仓库 | 说明 |
 |------|------|
-| [gouno](https://github.com/rushairer/gouno) | 核心库（本仓库） |
-| [gouno-cli](https://github.com/rushairer/gouno-cli) | CLI 工具 |
-| [gouno-template](https://github.com/rushairer/gouno-template) | 默认项目模板 |
+| [gouno](https://github.com/rushairer/gouno) | 核心库与项目工具协议（本仓库） |
+| [gouno-cli](https://github.com/rushairer/gouno-cli) | 项目创建 CLI |
+| [gouno-template](https://github.com/rushairer/gouno-template) | 默认项目模板与默认 Codegen Policy |
 | [gouno-doc](https://github.com/rushairer/gouno-doc) | 文档 |
 
 ## 许可证
 
 MIT License。
-
