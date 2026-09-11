@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Add Template Codegen Specification v1 (`gouno.dev/codegen/v1`).
+- Add project-aware codegen manifest discovery, validation, dynamic Cobra command construction, declarative render outputs, generator composition, safe path enforcement, and automatic Go formatting.
+- Add `LoadProjectCommand` and `AttachProjectCommand`; templates can expose codegen only when they provide `.gouno/codegen.yaml`.
+
+### Changed
+- Move concrete generator policy out of Gouno Core. Generator names such as `domain`, `repository`, `service`, `controller`, `task`, and `suite` are now supplied by project templates.
+- Keep `GeneratorCmd` only as a compatibility proxy that delegates execution to the current project's codegen manifest.
+
+### Security
+- Reject absolute and project-escaping template/output paths before code generation.
+- Codegen v1 intentionally does not allow arbitrary shell hooks or executable plugins.
+
 ## [1.2.2] - 2026-08-28
 
 ### Added
@@ -43,7 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Rate limiter now enforces a `maxVisitors` cap (default 10000) on the visitors map — prevents memory exhaustion from large numbers of unique IPs. Use `SetMaxVisitors()` to customize. When the cap is reached, idle visitors are evicted before rejecting new IPs (`middleware/ratelimit.go`).
 
 ### Removed
-- Removed deprecated `template-set` resolution, `.gouno.yaml` support, and `--template-set` flags from all generator commands to align with `gouno-cli` v1.1.0; renamed file to `generator/template.go` (`generator/template.go`, `generator/*.go`).
+- Removed deprecated `template-set` resolution, `.gouno.yaml` support, and `--template-set` flags from all generator commands to align with `gouno-cli` v1.1.0; renamed file to `generator/template.go` (`generator/*.go`).
 - Deprecated package-level mutable response variables (`InternalServerErrorResponse`, `BadRequestResponse`, `UnauthorizedResponse`, `ForbiddenResponse`, `NotFoundResponse`, `MethodNotAllowedResponse`, `RequestTimeoutResponse`, `ConflictResponse`, `GoneResponse`) — use the corresponding `New*Response()` factory functions instead (`response.go`).
 
 ## [1.0.0] - 2026-05-31
