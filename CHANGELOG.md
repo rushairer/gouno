@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Require latest-patch selection (`check-latest: true`) for Go version ranges in CI to prevent stale runner caches from hiding standard-library security fixes.
+
 ## [1.4.0] - 2026-11-04
 
 ### Changed

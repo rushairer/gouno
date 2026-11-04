@@ -56,3 +56,7 @@ Follow repository CI and contribution requirements. Public protocol or compatibi
 - Keep `golang.org/x/net` at v0.60.0 or newer for the October 2026 HTTP/2 advisories. Keep the compatible security floor at `golang.org/x/crypto` v0.58.0, `golang.org/x/sys` v0.49.0, `golang.org/x/text` v0.43.0, and `golang.org/x/sync` v0.24.0 or newer.
 - Do not suppress reachable `govulncheck` findings or downgrade these floors to restore compatibility with an unsupported Go series. A Go minimum-version change must be reflected in README, CONTRIBUTING, release checklist, changelog, and the cross-repository compatibility guidance.
 - Use `golangci-lint` v2.15.0 or newer. Older v2.12.2 binaries were built with Go 1.26 and panic when parsing Go 1.27 standard-library source; keep the lint action and local tooling aligned.
+
+## Go patch freshness
+
+- Every `actions/setup-go` step that uses a version range such as `1.26.x` or `1.27.x` must set `check-latest: true`. Hosted runner caches can otherwise select an older vulnerable patch that still satisfies the range. Keep govulncheck enabled and verify the actual selected standard-library version.
