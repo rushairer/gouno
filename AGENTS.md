@@ -49,3 +49,9 @@ Do not duplicate normative protocol text across repositories. Link to the author
 ## Validation
 
 Follow repository CI and contribution requirements. Public protocol or compatibility changes are not complete until tests, vet, lint, vulnerability checks, and relevant cross-repository integration checks pass.
+
+## Toolchain and dependency security baseline
+
+- Gouno v1.4.0 and later require Go 1.26.0 or newer. CI must test the latest patch releases of Go 1.26.x and 1.27.x.
+- Keep `golang.org/x/net` at v0.60.0 or newer for the October 2026 HTTP/2 advisories. Keep the compatible security floor at `golang.org/x/crypto` v0.58.0, `golang.org/x/sys` v0.49.0, `golang.org/x/text` v0.43.0, and `golang.org/x/sync` v0.24.0 or newer.
+- Do not suppress reachable `govulncheck` findings or downgrade these floors to restore compatibility with an unsupported Go series. A Go minimum-version change must be reflected in README, CONTRIBUTING, release checklist, changelog, and the cross-repository compatibility guidance.
