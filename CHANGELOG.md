@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Update go-pipeline, YAML, x/sync, and x/text dependencies to their current compatible releases.
 
 ### Security
-- Upgrade golang.org/x/net to v0.60.0 with compatible x/crypto and x/sys versions to remediate reachable HTTP/2 vulnerabilities.
+- Upgrade golang.org/x/net to v0.60.0, x/crypto to v0.58.0, and x/sys to v0.49.0 to remediate reachable HTTP/2 vulnerabilities.
 
 ## [1.3.0] - 2026-09-11
 
