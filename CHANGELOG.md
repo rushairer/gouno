@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - Require Go 1.26.0 or newer and validate the latest Go 1.26.x and 1.27.x patch releases in CI.
+- Upgrade the Go 1.27-compatible golangci-lint toolchain to v2.15.0.
 - Update go-pipeline, YAML, x/sync, and x/text dependencies to their current compatible releases.
 
 ### Security
