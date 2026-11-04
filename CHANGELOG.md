@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Require Go 1.26.0 or newer and validate the latest Go 1.26.x and 1.27.x patch releases in CI.
+- Update go-pipeline, YAML, x/sync, and x/text dependencies to their current compatible releases.
+
+### Security
+- Upgrade golang.org/x/net to v0.60.0 with compatible x/crypto and x/sys versions to remediate reachable HTTP/2 vulnerabilities.
+
 ## [1.3.0] - 2026-09-11
 
 ### Added
