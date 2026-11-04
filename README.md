@@ -19,7 +19,7 @@ Gouno owns                          Templates / applications own
 
 ## Supported Go versions
 
-gouno requires Go 1.25 or newer. CI covers the latest security patch of the current and previous stable Go series; applications should keep their patch release current.
+gouno v1.4.0 requires Go 1.26.0 or newer. CI validates the latest Go 1.26.x and 1.27.x patch releases; applications should keep their patch release current.
 
 ## Quick Start
 
