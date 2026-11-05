@@ -1,0 +1,88 @@
+{
+  "verified_utc": "2026-11-05T11:02:23.001615+00:00",
+  "workflow": "https://github.com/rushairer/gosso/actions/runs/42013419089",
+  "release": "https://github.com/rushairer/gosso/releases/tag/v1.7.0",
+  "commit": "5bd45c8f9946662274117c4644b31ce90a003464",
+  "image": "ghcr.io/rushairer/gosso@sha256:b88b0475af7633afa8d6fda8ca7c3f4297d235a36e88219d9010818e76ff889a",
+  "cosign_version": "3.1.4",
+  "certificate_identity": "https://github.com/rushairer/gosso/.github/workflows/release.yml@refs/tags/v1.7.0",
+  "oidc_issuer": "https://token.actions.githubusercontent.com",
+  "cosign_verify_exit_code": 0,
+  "cosign_verify_attestation_exit_code": 0,
+  "cyclonedx_predicate_matches_downloaded_release_asset": true,
+  "sbom_assets": {
+    "gosso-sbom.cdx.json": {
+      "sha256": "bc9f1bff0d16ad5b2a8e37912dc3004948354cb8bd486f79b2bed3c8a0c7dbae",
+      "download_url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/gosso-sbom.cdx.json"
+    },
+    "gosso-sbom.spdx.json": {
+      "sha256": "8f73efe159ea68a9b2aeba70671d75a76ccc81faaa4bcec8a5007c51043a3175",
+      "download_url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/gosso-sbom.spdx.json"
+    }
+  },
+  "helm_oci": "oci://ghcr.io/rushairer/gosso/charts/gosso",
+  "helm_version": "1.7.0",
+  "helm_app_version": "1.7.0",
+  "helm_manifest_digest": "sha256:97a538f2049c377218051bcaa58b225c77495e1140a4193c646afcac6601f33c",
+  "architecture_sboms": {
+    "linux/amd64": {
+      "format": "SPDX-2.3",
+      "packages": 102,
+      "source": "docker buildx imagetools inspect --format {{json .SBOM}}"
+    },
+    "linux/arm64": {
+      "format": "SPDX-2.3",
+      "packages": 102,
+      "source": "docker buildx imagetools inspect --format {{json .SBOM}}"
+    }
+  },
+  "sbom_release_asset_digests_match_github_metadata": true,
+  "trivy": {
+    "version": "0.76.1",
+    "severity": [
+      "HIGH",
+      "CRITICAL"
+    ],
+    "ignore_unfixed": false,
+    "exit_code": {
+      "amd64": 0,
+      "arm64": 0
+    },
+    "results": {
+      "amd64": {
+        "high_critical_findings": 0,
+        "architecture": "amd64",
+        "targets": [
+          {
+            "target": "ghcr.io/rushairer/gosso@sha256:b88b0475af7633afa8d6fda8ca7c3f4297d235a36e88219d9010818e76ff889a (alpine 3.24.3)",
+            "type": "alpine"
+          },
+          {
+            "target": "app/gosso",
+            "type": "gobinary"
+          }
+        ]
+      },
+      "arm64": {
+        "high_critical_findings": 0,
+        "architecture": "arm64",
+        "targets": [
+          {
+            "target": "ghcr.io/rushairer/gosso@sha256:b88b0475af7633afa8d6fda8ca7c3f4297d235a36e88219d9010818e76ff889a (alpine 3.24.3)",
+            "type": "alpine"
+          },
+          {
+            "target": "app/gosso",
+            "type": "gobinary"
+          }
+        ]
+      }
+    },
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-06T07:00:54.926777259Z",
+      "UpdatedAt": "2026-11-05T07:00:54.926777429Z",
+      "DownloadedAt": "2026-11-05T11:16:53.370754Z"
+    }
+  }
+}

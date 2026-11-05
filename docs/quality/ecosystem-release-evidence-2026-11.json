@@ -1,0 +1,2045 @@
+{
+  "snapshot_utc": "2026-11-05T11:20:17.633020+00:00",
+  "repositories": {
+    "gouno": {
+      "target": "v1.4.0",
+      "original_baseline_tag": "v1.4.0",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v1.4.0",
+        "node_id": "REF_kwDOPk81ibByZWZzL3RhZ3MvdjEuNC4w",
+        "url": "https://api.github.com/repos/rushairer/gouno/git/refs/tags/v1.4.0",
+        "object": {
+          "sha": "1ccd3bed5de725d90cd318a7f4799da2b0eec079",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno/git/tags/1ccd3bed5de725d90cd318a7f4799da2b0eec079"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOPk81idoAKDFjY2QzYmVkNWRlNzI1ZDkwY2QzMThhN2Y0Nzk5ZGEyYjBlZWMwNzk",
+          "sha": "1ccd3bed5de725d90cd318a7f4799da2b0eec079",
+          "url": "https://api.github.com/repos/rushairer/gouno/git/tags/1ccd3bed5de725d90cd318a7f4799da2b0eec079",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-11-04T10:26:09Z"
+          },
+          "object": {
+            "sha": "20efba0af181cb3e03c5bcb199576bfcdec1bd7f",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno/git/commits/20efba0af181cb3e03c5bcb199576bfcdec1bd7f"
+          },
+          "tag": "v1.4.0",
+          "message": "gouno v1.4.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "3171d57a9b6d077a4e31a2477423b896cd0824fe",
+      "target_ref": {
+        "ref": "refs/tags/v1.4.0",
+        "node_id": "REF_kwDOPk81ibByZWZzL3RhZ3MvdjEuNC4w",
+        "url": "https://api.github.com/repos/rushairer/gouno/git/refs/tags/v1.4.0",
+        "object": {
+          "sha": "1ccd3bed5de725d90cd318a7f4799da2b0eec079",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno/git/tags/1ccd3bed5de725d90cd318a7f4799da2b0eec079"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOPk81idoAKDFjY2QzYmVkNWRlNzI1ZDkwY2QzMThhN2Y0Nzk5ZGEyYjBlZWMwNzk",
+          "sha": "1ccd3bed5de725d90cd318a7f4799da2b0eec079",
+          "url": "https://api.github.com/repos/rushairer/gouno/git/tags/1ccd3bed5de725d90cd318a7f4799da2b0eec079",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-11-04T10:26:09Z"
+          },
+          "object": {
+            "sha": "20efba0af181cb3e03c5bcb199576bfcdec1bd7f",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno/git/commits/20efba0af181cb3e03c5bcb199576bfcdec1bd7f"
+          },
+          "tag": "v1.4.0",
+          "message": "gouno v1.4.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-11-05T10:20:20Z",
+        "tagName": "v1.4.0",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gouno/releases/tag/v1.4.0"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 41816949423,
+          "headSha": "3171d57a9b6d077a4e31a2477423b896cd0824fe",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41816949423",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41813309775,
+          "headSha": "20efba0af181cb3e03c5bcb199576bfcdec1bd7f",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41813309775",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41801557094,
+          "headSha": "8f22201f5a35e6d6fbccf2fe254dc2d3deeb572d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41801557094",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "cancelled",
+          "databaseId": 41801359065,
+          "headSha": "03ac3123c672f3926a9a79b02aa117317400c53e",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41801359065",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41428659271,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41428659271",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41428655595,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41428655595",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41428655363,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/41428655363",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40307134708,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/40307134708",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40307129822,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/40307129822",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40307128407,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/40307128407",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 39237245357,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/39237245357",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 39237221038,
+          "headSha": "9f3be9acf293b1317a80af57cb5767608d6ec964",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno/actions/runs/39237221038",
+          "workflowName": "Dependabot Updates"
+        }
+      ]
+    },
+    "gouno-template": {
+      "target": "v1.4.0",
+      "original_baseline_tag": "v1.3.0",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v1.3.0",
+        "node_id": "REF_kwDOPk8yCbByZWZzL3RhZ3MvdjEuMy4w",
+        "url": "https://api.github.com/repos/rushairer/gouno-template/git/refs/tags/v1.3.0",
+        "object": {
+          "sha": "9b9b4d906a1d04ae9613f46eb36c9f31a4d365e6",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-template/git/tags/9b9b4d906a1d04ae9613f46eb36c9f31a4d365e6"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOPk8yCdoAKDliOWI0ZDkwNmExZDA0YWU5NjEzZjQ2ZWIzNmM5ZjMxYTRkMzY1ZTY",
+          "sha": "9b9b4d906a1d04ae9613f46eb36c9f31a4d365e6",
+          "url": "https://api.github.com/repos/rushairer/gouno-template/git/tags/9b9b4d906a1d04ae9613f46eb36c9f31a4d365e6",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-09-11T14:09:13Z"
+          },
+          "object": {
+            "sha": "c7d09d3393d460f8ebe8823f6c6175f42e83c0d8",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-template/git/commits/c7d09d3393d460f8ebe8823f6c6175f42e83c0d8"
+          },
+          "tag": "v1.3.0",
+          "message": "Release v1.3.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "01f227f34f6c056998a006bb8320f6187822aaf4",
+      "target_ref": {
+        "ref": "refs/tags/v1.4.0",
+        "node_id": "REF_kwDOPk8yCbByZWZzL3RhZ3MvdjEuNC4w",
+        "url": "https://api.github.com/repos/rushairer/gouno-template/git/refs/tags/v1.4.0",
+        "object": {
+          "sha": "75a4d30b3a3eca0dcda339daf1173eaac4c6ef31",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-template/git/tags/75a4d30b3a3eca0dcda339daf1173eaac4c6ef31"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOPk8yCdoAKDc1YTRkMzBiM2EzZWNhMGRjZGEzMzlkYWYxMTczZWFhYzRjNmVmMzE",
+          "sha": "75a4d30b3a3eca0dcda339daf1173eaac4c6ef31",
+          "url": "https://api.github.com/repos/rushairer/gouno-template/git/tags/75a4d30b3a3eca0dcda339daf1173eaac4c6ef31",
+          "tagger": {
+            "name": "rushairer",
+            "email": "rushairer@users.noreply.github.com",
+            "date": "2026-11-05T10:21:11Z"
+          },
+          "object": {
+            "sha": "9f0cba9c8a6be6331f48596c83663efbec5490a2",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-template/git/commits/9f0cba9c8a6be6331f48596c83663efbec5490a2"
+          },
+          "tag": "v1.4.0",
+          "message": "Release v1.4.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-11-05T10:23:01Z",
+        "tagName": "v1.4.0",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gouno-template/releases/tag/v1.4.0"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42011677505,
+          "headSha": "01f227f34f6c056998a006bb8320f6187822aaf4",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/42011677505",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817614153,
+          "headSha": "9f0cba9c8a6be6331f48596c83663efbec5490a2",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/41817614153",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817216985,
+          "headSha": "e90702ca3d9225a5eec248a5ff770bc3daa7b34b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/41817216985",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41816427562,
+          "headSha": "a1fb849ffd28cb5b040a889dea320ce62fa5e47d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/41816427562",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41812374121,
+          "headSha": "c99fbc758da5bb3ba1013c3c809aa5a203630bf4",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/41812374121",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41801595859,
+          "headSha": "400d62c21164e71de0f9fba85cd92a2eda93db8a",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/41801595859",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 34626648831,
+          "headSha": "68473cad0f7fc31509b63551d08ddd71f672b2ac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/34626648831",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 34613578646,
+          "headSha": "eb418447388f6925fd70003880fb38a226be6c88",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/34613578646",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 34612558255,
+          "headSha": "cdf7c7b48be5d39a0725ecb2fa8568affda85aac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/34612558255",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 34608127449,
+          "headSha": "c7d09d3393d460f8ebe8823f6c6175f42e83c0d8",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-template/actions/runs/34608127449",
+          "workflowName": "CI"
+        }
+      ]
+    },
+    "gouno-cli": {
+      "target": "v1.3.0",
+      "original_baseline_tag": "v1.2.1",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v1.2.1",
+        "node_id": "REF_kwDOPk8tG7ByZWZzL3RhZ3MvdjEuMi4x",
+        "url": "https://api.github.com/repos/rushairer/gouno-cli/git/refs/tags/v1.2.1",
+        "object": {
+          "sha": "cdc60d21afe9132915112d9fa3c5855eb0990f52",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-cli/git/tags/cdc60d21afe9132915112d9fa3c5855eb0990f52"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOPk8tG9oAKGNkYzYwZDIxYWZlOTEzMjkxNTExMmQ5ZmEzYzU4NTVlYjA5OTBmNTI",
+          "sha": "cdc60d21afe9132915112d9fa3c5855eb0990f52",
+          "url": "https://api.github.com/repos/rushairer/gouno-cli/git/tags/cdc60d21afe9132915112d9fa3c5855eb0990f52",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-09-11T14:12:27Z"
+          },
+          "object": {
+            "sha": "9892c689d2e383593ee92d65f94303a870d376f0",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-cli/git/commits/9892c689d2e383593ee92d65f94303a870d376f0"
+          },
+          "tag": "v1.2.1",
+          "message": "Release v1.2.1\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "a3930d1391ce3aedb8661eef472555611fd54540",
+      "target_ref": {
+        "ref": "refs/tags/v1.3.0",
+        "node_id": "REF_kwDOPk8tG7ByZWZzL3RhZ3MvdjEuMy4w",
+        "url": "https://api.github.com/repos/rushairer/gouno-cli/git/refs/tags/v1.3.0",
+        "object": {
+          "sha": "b898d5e921fb9a001e03a65b1b880293794fc606",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-cli/git/tags/b898d5e921fb9a001e03a65b1b880293794fc606"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOPk8tG9oAKGI4OThkNWU5MjFmYjlhMDAxZTAzYTY1YjFiODgwMjkzNzk0ZmM2MDY",
+          "sha": "b898d5e921fb9a001e03a65b1b880293794fc606",
+          "url": "https://api.github.com/repos/rushairer/gouno-cli/git/tags/b898d5e921fb9a001e03a65b1b880293794fc606",
+          "tagger": {
+            "name": "rushairer",
+            "email": "rushairer@users.noreply.github.com",
+            "date": "2026-11-05T10:25:34Z"
+          },
+          "object": {
+            "sha": "087c00a523a6ec8c512d5eb9c65f657f6be8d5fb",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-cli/git/commits/087c00a523a6ec8c512d5eb9c65f657f6be8d5fb"
+          },
+          "tag": "v1.3.0",
+          "message": "Release v1.3.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-11-05T10:26:00Z",
+        "tagName": "v1.3.0",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gouno-cli/releases/tag/v1.3.0"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42011734513,
+          "headSha": "a3930d1391ce3aedb8661eef472555611fd54540",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/42011734513",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010113946,
+          "headSha": "087c00a523a6ec8c512d5eb9c65f657f6be8d5fb",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/42010113946",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41997774655,
+          "headSha": "235f2fbd6278d31e0d3f464aea4b56495b9f835e",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41997774655",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41997153411,
+          "headSha": "db7e6ebdf6f696e712192066863e5742f74bdbd5",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41997153411",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41813280546,
+          "headSha": "c5e0b4c8fd0300e7fda7d693345ddcd58f69c8ca",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41813280546",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41801618759,
+          "headSha": "3c0a8cd91bd0209f4396d657b68487ae39dcf7a8",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41801618759",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41623506846,
+          "headSha": "bbd22d723daccd72c940bd09af7081cba926a12b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41623506846",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41611164071,
+          "headSha": "b6edadb00b8472ae4237dd3ad0d94a41fae11601",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41611164071",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41531189752,
+          "headSha": "e82bfa268c455f80cfa1ad0a3e026d1ccba6d8fa",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41531189752",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41531189905,
+          "headSha": "e82bfa268c455f80cfa1ad0a3e026d1ccba6d8fa",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/41531189905",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40406978080,
+          "headSha": "e82bfa268c455f80cfa1ad0a3e026d1ccba6d8fa",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/40406978080",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40406978102,
+          "headSha": "e82bfa268c455f80cfa1ad0a3e026d1ccba6d8fa",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-cli/actions/runs/40406978102",
+          "workflowName": "Dependabot Updates"
+        }
+      ]
+    },
+    "gosso": {
+      "target": "v1.7.0",
+      "original_baseline_tag": "v1.6.1",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v1.6.1",
+        "node_id": "REF_kwDOQKwCLLByZWZzL3RhZ3MvdjEuNi4x",
+        "url": "https://api.github.com/repos/rushairer/gosso/git/refs/tags/v1.6.1",
+        "object": {
+          "sha": "ff096b3474fbc7c896885929d79f5493d23dcac3",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gosso/git/tags/ff096b3474fbc7c896885929d79f5493d23dcac3"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOQKwCLNoAKGZmMDk2YjM0NzRmYmM3Yzg5Njg4NTkyOWQ3OWY1NDkzZDIzZGNhYzM",
+          "sha": "ff096b3474fbc7c896885929d79f5493d23dcac3",
+          "url": "https://api.github.com/repos/rushairer/gosso/git/tags/ff096b3474fbc7c896885929d79f5493d23dcac3",
+          "tagger": {
+            "name": "Aben",
+            "email": "5195693+rushairer@users.noreply.github.com",
+            "date": "2026-09-11T04:30:19Z"
+          },
+          "object": {
+            "sha": "0ec136f67b2fa165abbf77fedb5fdd50b5ebe69f",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gosso/git/commits/0ec136f67b2fa165abbf77fedb5fdd50b5ebe69f"
+          },
+          "tag": "v1.6.1",
+          "message": "gosso v1.6.1\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "5bd45c8f9946662274117c4644b31ce90a003464",
+      "target_ref": {
+        "ref": "refs/tags/v1.7.0",
+        "node_id": "REF_kwDOQKwCLLByZWZzL3RhZ3MvdjEuNy4w",
+        "url": "https://api.github.com/repos/rushairer/gosso/git/refs/tags/v1.7.0",
+        "object": {
+          "sha": "15d529590b119621a51d624d192f489591c12bf9",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gosso/git/tags/15d529590b119621a51d624d192f489591c12bf9"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOQKwCLNoAKDE1ZDUyOTU5MGIxMTk2MjFhNTFkNjI0ZDE5MmY0ODk1OTFjMTJiZjk",
+          "sha": "15d529590b119621a51d624d192f489591c12bf9",
+          "url": "https://api.github.com/repos/rushairer/gosso/git/tags/15d529590b119621a51d624d192f489591c12bf9",
+          "tagger": {
+            "name": "rushairer",
+            "email": "rushairer@users.noreply.github.com",
+            "date": "2026-11-05T10:45:55Z"
+          },
+          "object": {
+            "sha": "5bd45c8f9946662274117c4644b31ce90a003464",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gosso/git/commits/5bd45c8f9946662274117c4644b31ce90a003464"
+          },
+          "tag": "v1.7.0",
+          "message": "Release v1.7.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [
+          {
+            "apiUrl": "https://api.github.com/repos/rushairer/gosso/releases/assets/713075514",
+            "contentType": "text/markdown",
+            "createdAt": "2026-11-05T10:55:38Z",
+            "digest": "sha256:39047798145a6c43489c01626cf905f55318032bba04b07d1969222e3275253b",
+            "downloadCount": 1,
+            "id": "RA_kwDOQKwCLM4qgKs6",
+            "label": "",
+            "name": "CHANGELOG.md",
+            "size": 358163,
+            "state": "uploaded",
+            "updatedAt": "2026-11-05T10:55:38Z",
+            "url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/CHANGELOG.md"
+          },
+          {
+            "apiUrl": "https://api.github.com/repos/rushairer/gosso/releases/assets/713075513",
+            "contentType": "application/json",
+            "createdAt": "2026-11-05T10:55:38Z",
+            "digest": "sha256:bc9f1bff0d16ad5b2a8e37912dc3004948354cb8bd486f79b2bed3c8a0c7dbae",
+            "downloadCount": 1,
+            "id": "RA_kwDOQKwCLM4qgKs5",
+            "label": "",
+            "name": "gosso-sbom.cdx.json",
+            "size": 348436,
+            "state": "uploaded",
+            "updatedAt": "2026-11-05T10:55:38Z",
+            "url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/gosso-sbom.cdx.json"
+          },
+          {
+            "apiUrl": "https://api.github.com/repos/rushairer/gosso/releases/assets/713075515",
+            "contentType": "application/json",
+            "createdAt": "2026-11-05T10:55:38Z",
+            "digest": "sha256:8f73efe159ea68a9b2aeba70671d75a76ccc81faaa4bcec8a5007c51043a3175",
+            "downloadCount": 1,
+            "id": "RA_kwDOQKwCLM4qgKs7",
+            "label": "",
+            "name": "gosso-sbom.spdx.json",
+            "size": 760574,
+            "state": "uploaded",
+            "updatedAt": "2026-11-05T10:55:39Z",
+            "url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/gosso-sbom.spdx.json"
+          }
+        ],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-11-05T10:55:39Z",
+        "tagName": "v1.7.0",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gosso/releases/tag/v1.7.0"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42011835603,
+          "headSha": "5bd45c8f9946662274117c4644b31ce90a003464",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/42011835603",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42011835490,
+          "headSha": "5bd45c8f9946662274117c4644b31ce90a003464",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/42011835490",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "cancelled",
+          "databaseId": 42011730566,
+          "headSha": "15752bfb227a00d5d26c30148c5dd1f3b6d9bb08",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/42011730566",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "cancelled",
+          "databaseId": 42011730599,
+          "headSha": "15752bfb227a00d5d26c30148c5dd1f3b6d9bb08",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/42011730599",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010408735,
+          "headSha": "0ba62cbaa6386f64f61b31a03f86db2b5ad5109c",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/42010408735",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "cancelled",
+          "databaseId": 42010408538,
+          "headSha": "0ba62cbaa6386f64f61b31a03f86db2b5ad5109c",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/42010408538",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817584792,
+          "headSha": "751750d05fb50144204fefa71506f931e1714e8d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/41817584792",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817584745,
+          "headSha": "751750d05fb50144204fefa71506f931e1714e8d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/41817584745",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41803148363,
+          "headSha": "0f6f15b5b2a4826e989d36f894434505e2221272",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/41803148363",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41803148471,
+          "headSha": "0f6f15b5b2a4826e989d36f894434505e2221272",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/41803148471",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41624315410,
+          "headSha": "cfd5854f47336f60a535620717bf24bb2d6cfabc",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/41624315410",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41624315077,
+          "headSha": "cfd5854f47336f60a535620717bf24bb2d6cfabc",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso/actions/runs/41624315077",
+          "workflowName": "Images"
+        }
+      ]
+    },
+    "gosso-admin": {
+      "target": "v0.7.25",
+      "original_baseline_tag": "v0.7.24",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v0.7.24",
+        "node_id": "REF_kwDOTEa9jLFyZWZzL3RhZ3MvdjAuNy4yNA",
+        "url": "https://api.github.com/repos/rushairer/gosso-admin/git/refs/tags/v0.7.24",
+        "object": {
+          "sha": "441ea5dac37b1ce97c50e16711fb22f02606b2e5",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gosso-admin/git/tags/441ea5dac37b1ce97c50e16711fb22f02606b2e5"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOTEa9jNoAKDQ0MWVhNWRhYzM3YjFjZTk3YzUwZTE2NzExZmIyMmYwMjYwNmIyZTU",
+          "sha": "441ea5dac37b1ce97c50e16711fb22f02606b2e5",
+          "url": "https://api.github.com/repos/rushairer/gosso-admin/git/tags/441ea5dac37b1ce97c50e16711fb22f02606b2e5",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-09-04T10:55:58Z"
+          },
+          "object": {
+            "sha": "974ddfce7c4efe5abe7edfa7b4e597e9258573d3",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gosso-admin/git/commits/974ddfce7c4efe5abe7edfa7b4e597e9258573d3"
+          },
+          "tag": "v0.7.24",
+          "message": "Release v0.7.24 - Pass 16 Design System Alignment\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "51fe7448e3ff526e961630133443221507e9633f",
+      "target_ref": {
+        "unavailable": "gh: Not Found (HTTP 404)"
+      },
+      "release": {
+        "unavailable": "release not found"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42016212154,
+          "headSha": "51fe7448e3ff526e961630133443221507e9633f",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42016212154",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42016212304,
+          "headSha": "51fe7448e3ff526e961630133443221507e9633f",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42016212304",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42016212099,
+          "headSha": "51fe7448e3ff526e961630133443221507e9633f",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42016212099",
+          "workflowName": "Security"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42015649699,
+          "headSha": "64f4c437898eec66962cb966c840588eb331c9e1",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42015649699",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42015649627,
+          "headSha": "64f4c437898eec66962cb966c840588eb331c9e1",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42015649627",
+          "workflowName": "Gosso Release Compatibility"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42015649503,
+          "headSha": "64f4c437898eec66962cb966c840588eb331c9e1",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42015649503",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42015649504,
+          "headSha": "64f4c437898eec66962cb966c840588eb331c9e1",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42015649504",
+          "workflowName": "Security"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010574246,
+          "headSha": "495a3011b05bdad5d3542e0d57c1b29cb50266eb",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42010574246",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010574241,
+          "headSha": "495a3011b05bdad5d3542e0d57c1b29cb50266eb",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42010574241",
+          "workflowName": "Security"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010574236,
+          "headSha": "495a3011b05bdad5d3542e0d57c1b29cb50266eb",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/42010574236",
+          "workflowName": "Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41811416027,
+          "headSha": "0feeab70c57ef8da00a05e2ecccfe14c67d50ea6",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/41811416027",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41811415999,
+          "headSha": "0feeab70c57ef8da00a05e2ecccfe14c67d50ea6",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gosso-admin/actions/runs/41811415999",
+          "workflowName": "Images"
+        }
+      ]
+    },
+    "gouno-blog": {
+      "target": "v1.6.0",
+      "original_baseline_tag": "v1.5.26",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v1.5.26",
+        "node_id": "REF_kwDOTEaIBLFyZWZzL3RhZ3MvdjEuNS4yNg",
+        "url": "https://api.github.com/repos/rushairer/gouno-blog/git/refs/tags/v1.5.26",
+        "object": {
+          "sha": "5c88a34d1dc4031efe37f774f3ee6955629fa233",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-blog/git/tags/5c88a34d1dc4031efe37f774f3ee6955629fa233"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOTEaIBNoAKDVjODhhMzRkMWRjNDAzMWVmZTM3Zjc3NGYzZWU2OTU1NjI5ZmEyMzM",
+          "sha": "5c88a34d1dc4031efe37f774f3ee6955629fa233",
+          "url": "https://api.github.com/repos/rushairer/gouno-blog/git/tags/5c88a34d1dc4031efe37f774f3ee6955629fa233",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-09-04T10:56:10Z"
+          },
+          "object": {
+            "sha": "107ee2e28eb96bda1409926fdb324550bb1bae98",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-blog/git/commits/107ee2e28eb96bda1409926fdb324550bb1bae98"
+          },
+          "tag": "v1.5.26",
+          "message": "Release v1.5.26 - Pass 16 Design System Alignment\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+      "target_ref": {
+        "unavailable": "gh: Not Found (HTTP 404)"
+      },
+      "release": {
+        "unavailable": "release not found"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42016283335,
+          "headSha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42016283335",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42016283306,
+          "headSha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42016283306",
+          "workflowName": "Gosso Release BFF Compatibility"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42016283318,
+          "headSha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42016283318",
+          "workflowName": "Publish Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42012960444,
+          "headSha": "e319b9dadee97f9a77b4b654142be9765908b495",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42012960444",
+          "workflowName": "Publish Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42012960408,
+          "headSha": "e319b9dadee97f9a77b4b654142be9765908b495",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42012960408",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42011911102,
+          "headSha": "35138fed43ffc8ae2d0b887912a8ff867b854aa9",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42011911102",
+          "workflowName": "Publish Images"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42011911014,
+          "headSha": "35138fed43ffc8ae2d0b887912a8ff867b854aa9",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42011911014",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42003676280,
+          "headSha": "18e301ef510bf6013ac8b63b66d0eb1dbe1ea5ac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/42003676280",
+          "workflowName": "Blog Showcase Parity"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817014894,
+          "headSha": "18e301ef510bf6013ac8b63b66d0eb1dbe1ea5ac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/41817014894",
+          "workflowName": "Dependency Graph"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817011267,
+          "headSha": "18e301ef510bf6013ac8b63b66d0eb1dbe1ea5ac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/41817011267",
+          "workflowName": "Gosso Release BFF Compatibility"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817009537,
+          "headSha": "18e301ef510bf6013ac8b63b66d0eb1dbe1ea5ac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/41817009537",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41817009777,
+          "headSha": "18e301ef510bf6013ac8b63b66d0eb1dbe1ea5ac",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-blog/actions/runs/41817009777",
+          "workflowName": "Blog Showcase Parity"
+        }
+      ]
+    },
+    "gouno-ui": {
+      "target": "v0.4.9",
+      "original_baseline_tag": "v0.4.9",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v0.4.9",
+        "node_id": "REF_kwDOUP-POLByZWZzL3RhZ3MvdjAuNC45",
+        "url": "https://api.github.com/repos/rushairer/gouno-ui/git/refs/tags/v0.4.9",
+        "object": {
+          "sha": "4e2b25551bdb1f08310bfa5a9c51237512c9ce72",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-ui/git/tags/4e2b25551bdb1f08310bfa5a9c51237512c9ce72"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOUP-PONoAKDRlMmIyNTU1MWJkYjFmMDgzMTBiZmE1YTljNTEyMzc1MTJjOWNlNzI",
+          "sha": "4e2b25551bdb1f08310bfa5a9c51237512c9ce72",
+          "url": "https://api.github.com/repos/rushairer/gouno-ui/git/tags/4e2b25551bdb1f08310bfa5a9c51237512c9ce72",
+          "tagger": {
+            "name": "github-actions[bot]",
+            "email": "41898282+github-actions[bot]@users.noreply.github.com",
+            "date": "2026-09-22T11:16:49Z"
+          },
+          "object": {
+            "sha": "4495147ae0b9807d2e5c9137187cfdc3e906cceb",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-ui/git/commits/4495147ae0b9807d2e5c9137187cfdc3e906cceb"
+          },
+          "tag": "v0.4.9",
+          "message": "@gouno/ui 0.4.9\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "b706b6c25c6252c7f55500b69eb08e17c1de554b",
+      "target_ref": {
+        "ref": "refs/tags/v0.4.9",
+        "node_id": "REF_kwDOUP-POLByZWZzL3RhZ3MvdjAuNC45",
+        "url": "https://api.github.com/repos/rushairer/gouno-ui/git/refs/tags/v0.4.9",
+        "object": {
+          "sha": "4e2b25551bdb1f08310bfa5a9c51237512c9ce72",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-ui/git/tags/4e2b25551bdb1f08310bfa5a9c51237512c9ce72"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOUP-PONoAKDRlMmIyNTU1MWJkYjFmMDgzMTBiZmE1YTljNTEyMzc1MTJjOWNlNzI",
+          "sha": "4e2b25551bdb1f08310bfa5a9c51237512c9ce72",
+          "url": "https://api.github.com/repos/rushairer/gouno-ui/git/tags/4e2b25551bdb1f08310bfa5a9c51237512c9ce72",
+          "tagger": {
+            "name": "github-actions[bot]",
+            "email": "41898282+github-actions[bot]@users.noreply.github.com",
+            "date": "2026-09-22T11:16:49Z"
+          },
+          "object": {
+            "sha": "4495147ae0b9807d2e5c9137187cfdc3e906cceb",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-ui/git/commits/4495147ae0b9807d2e5c9137187cfdc3e906cceb"
+          },
+          "tag": "v0.4.9",
+          "message": "@gouno/ui 0.4.9\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [
+          {
+            "apiUrl": "https://api.github.com/repos/rushairer/gouno-ui/releases/assets/581239234",
+            "contentType": "application/x-gtar",
+            "createdAt": "2026-09-22T11:20:06Z",
+            "digest": "sha256:a035b5aea1311170d11f1cbbcc48f15bc66c04d6d73a39de464893b6feee3d6e",
+            "downloadCount": 1,
+            "id": "RA_kwDOUP-POM4ipQHC",
+            "label": "",
+            "name": "gouno-ui-0.4.9.tgz",
+            "size": 208937,
+            "state": "uploaded",
+            "updatedAt": "2026-09-22T11:20:06Z",
+            "url": "https://github.com/rushairer/gouno-ui/releases/download/v0.4.9/gouno-ui-0.4.9.tgz"
+          }
+        ],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-09-22T11:20:07Z",
+        "tagName": "v0.4.9",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gouno-ui/releases/tag/v0.4.9"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 41805317403,
+          "headSha": "b706b6c25c6252c7f55500b69eb08e17c1de554b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/41805317403",
+          "workflowName": "Publish Showcase to GitHub Pages"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41805317297,
+          "headSha": "b706b6c25c6252c7f55500b69eb08e17c1de554b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/41805317297",
+          "workflowName": "Canonical Visual Golden Smoke"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41805317291,
+          "headSha": "b706b6c25c6252c7f55500b69eb08e17c1de554b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/41805317291",
+          "workflowName": "Gosso Admin Consumer Parity"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41805317263,
+          "headSha": "b706b6c25c6252c7f55500b69eb08e17c1de554b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/41805317263",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41805317271,
+          "headSha": "b706b6c25c6252c7f55500b69eb08e17c1de554b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/41805317271",
+          "workflowName": "Blog Consumer Parity"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37443797995,
+          "headSha": "2e1e1a5c31cc6f741fecf273b7ddd63a88133ee9",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37443797995",
+          "workflowName": "Blog Consumer Parity"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37443797921,
+          "headSha": "2e1e1a5c31cc6f741fecf273b7ddd63a88133ee9",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37443797921",
+          "workflowName": "Publish Showcase to GitHub Pages"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37443797955,
+          "headSha": "2e1e1a5c31cc6f741fecf273b7ddd63a88133ee9",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37443797955",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37441563083,
+          "headSha": "6bc3d7dae217b9e398c9f0cd6c46375ae737e778",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37441563083",
+          "workflowName": "Publish Showcase to GitHub Pages"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37441563066,
+          "headSha": "6bc3d7dae217b9e398c9f0cd6c46375ae737e778",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37441563066",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37441563137,
+          "headSha": "6bc3d7dae217b9e398c9f0cd6c46375ae737e778",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37441563137",
+          "workflowName": "Blog Consumer Parity"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 37432691888,
+          "headSha": "1003c024a2a9c1711230e443782ae090f6b29c49",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-ui/actions/runs/37432691888",
+          "workflowName": "CI"
+        }
+      ]
+    },
+    "gouno-doc": {
+      "target": "v1.3.1",
+      "original_baseline_tag": "v1.3.0",
+      "original_baseline_ref": {
+        "ref": "refs/tags/v1.3.0",
+        "node_id": "REF_kwDOSs5hELByZWZzL3RhZ3MvdjEuMy4w",
+        "url": "https://api.github.com/repos/rushairer/gouno-doc/git/refs/tags/v1.3.0",
+        "object": {
+          "sha": "8a5b20b7adfd6bf676bcf8d8cff22ef7b4010c51",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-doc/git/tags/8a5b20b7adfd6bf676bcf8d8cff22ef7b4010c51"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOSs5hENoAKDhhNWIyMGI3YWRmZDZiZjY3NmJjZjhkOGNmZjIyZWY3YjQwMTBjNTE",
+          "sha": "8a5b20b7adfd6bf676bcf8d8cff22ef7b4010c51",
+          "url": "https://api.github.com/repos/rushairer/gouno-doc/git/tags/8a5b20b7adfd6bf676bcf8d8cff22ef7b4010c51",
+          "tagger": {
+            "name": "Aben",
+            "email": "me@aben.io",
+            "date": "2026-09-11T15:21:17Z"
+          },
+          "object": {
+            "sha": "55d5ee2758457ffa3d7a550ed1176824e8e0f255",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-doc/git/commits/55d5ee2758457ffa3d7a550ed1176824e8e0f255"
+          },
+          "tag": "v1.3.0",
+          "message": "gouno-doc v1.3.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "main_sha": "fad499f7f28ff2e86d03d5c26ae6de127222d915",
+      "target_ref": {
+        "ref": "refs/tags/v1.3.1",
+        "node_id": "REF_kwDOSs5hELByZWZzL3RhZ3MvdjEuMy4x",
+        "url": "https://api.github.com/repos/rushairer/gouno-doc/git/refs/tags/v1.3.1",
+        "object": {
+          "sha": "b3797d0260806d8b8ea84a72d8b223070116c54e",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-doc/git/tags/b3797d0260806d8b8ea84a72d8b223070116c54e"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOSs5hENoAKGIzNzk3ZDAyNjA4MDZkOGI4ZWE4NGE3MmQ4YjIyMzA3MDExNmM1NGU",
+          "sha": "b3797d0260806d8b8ea84a72d8b223070116c54e",
+          "url": "https://api.github.com/repos/rushairer/gouno-doc/git/tags/b3797d0260806d8b8ea84a72d8b223070116c54e",
+          "tagger": {
+            "name": "rushairer",
+            "email": "rushairer@users.noreply.github.com",
+            "date": "2026-11-05T11:02:23Z"
+          },
+          "object": {
+            "sha": "fad499f7f28ff2e86d03d5c26ae6de127222d915",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-doc/git/commits/fad499f7f28ff2e86d03d5c26ae6de127222d915"
+          },
+          "tag": "v1.3.1",
+          "message": "Release v1.3.1\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-11-05T11:03:35Z",
+        "tagName": "v1.3.1",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gouno-doc/releases/tag/v1.3.1"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42015368871,
+          "headSha": "fad499f7f28ff2e86d03d5c26ae6de127222d915",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/42015368871",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42011737961,
+          "headSha": "2a3166c82dc90cb93ed0190ebd4e1377f0446155",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/42011737961",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42011013938,
+          "headSha": "18c8773d862cb7f4c2e32d0eba69572f1e6df075",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/42011013938",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41997587081,
+          "headSha": "d67fae8dedeba4b698e3258ee5a79c5f00b96a7a",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/41997587081",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41816394528,
+          "headSha": "2ee6c0fd9847648d3fc6a53de3d9627202e5cf46",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/41816394528",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41811162841,
+          "headSha": "062beae00737ef4a40b1e3b7289697e4d4f148ba",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/41811162841",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41801274660,
+          "headSha": "c42f14e4307d727c97205d738be459e64691325d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/41801274660",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41800593055,
+          "headSha": "4d361a4612b679118b255be0e6f9a0345ba18467",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/41800593055",
+          "workflowName": "Documentation CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41415334720,
+          "headSha": "813abc45f3c128ce0e4499de78e03f6d318c2c1d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/41415334720",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40294464113,
+          "headSha": "813abc45f3c128ce0e4499de78e03f6d318c2c1d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/40294464113",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 39224928964,
+          "headSha": "813abc45f3c128ce0e4499de78e03f6d318c2c1d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/39224928964",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 38331568568,
+          "headSha": "813abc45f3c128ce0e4499de78e03f6d318c2c1d",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-doc/actions/runs/38331568568",
+          "workflowName": "Dependabot Updates"
+        }
+      ]
+    },
+    "gouno-agent-demo": {
+      "target": "v0.3.0",
+      "original_baseline_tag": null,
+      "original_baseline_ref": {
+        "absent": "historical v0.2.0 has no public tag"
+      },
+      "main_sha": "735794f1982a0f969e5b956a929f5e9a92440e86",
+      "target_ref": {
+        "ref": "refs/tags/v0.3.0",
+        "node_id": "REF_kwDOTnBGgbByZWZzL3RhZ3MvdjAuMy4w",
+        "url": "https://api.github.com/repos/rushairer/gouno-agent-demo/git/refs/tags/v0.3.0",
+        "object": {
+          "sha": "18bf25e95bccc3dda0e6bae0cb680abff7bfc748",
+          "type": "tag",
+          "url": "https://api.github.com/repos/rushairer/gouno-agent-demo/git/tags/18bf25e95bccc3dda0e6bae0cb680abff7bfc748"
+        },
+        "annotated_tag": {
+          "node_id": "TA_kwDOTnBGgdoAKDE4YmYyNWU5NWJjY2MzZGRhMGU2YmFlMGNiNjgwYWJmZjdiZmM3NDg",
+          "sha": "18bf25e95bccc3dda0e6bae0cb680abff7bfc748",
+          "url": "https://api.github.com/repos/rushairer/gouno-agent-demo/git/tags/18bf25e95bccc3dda0e6bae0cb680abff7bfc748",
+          "tagger": {
+            "name": "rushairer",
+            "email": "rushairer@users.noreply.github.com",
+            "date": "2026-11-05T10:32:05Z"
+          },
+          "object": {
+            "sha": "ca372fc72379dbf63e6794f5d4e65af7c88e8ba7",
+            "type": "commit",
+            "url": "https://api.github.com/repos/rushairer/gouno-agent-demo/git/commits/ca372fc72379dbf63e6794f5d4e65af7c88e8ba7"
+          },
+          "tag": "v0.3.0",
+          "message": "Release v0.3.0\n",
+          "verification": {
+            "verified": false,
+            "reason": "unsigned",
+            "signature": null,
+            "payload": null,
+            "verified_at": null
+          }
+        }
+      },
+      "release": {
+        "assets": [],
+        "isDraft": false,
+        "isPrerelease": false,
+        "publishedAt": "2026-11-05T10:32:46Z",
+        "tagName": "v0.3.0",
+        "targetCommitish": "main",
+        "url": "https://github.com/rushairer/gouno-agent-demo/releases/tag/v0.3.0"
+      },
+      "recent_main_runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 42014301881,
+          "headSha": "735794f1982a0f969e5b956a929f5e9a92440e86",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/42014301881",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42011180831,
+          "headSha": "ca372fc72379dbf63e6794f5d4e65af7c88e8ba7",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/42011180831",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010913925,
+          "headSha": "d6485f225ae57008ca785b4a61f6e60ee197cf4b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/42010913925",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010912404,
+          "headSha": "d6485f225ae57008ca785b4a61f6e60ee197cf4b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/42010912404",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 42010715395,
+          "headSha": "d6485f225ae57008ca785b4a61f6e60ee197cf4b",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/42010715395",
+          "workflowName": "CI"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41636773304,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/41636773304",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 41636773085,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/41636773085",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40504760561,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/40504760561",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 40504759849,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/40504759849",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 39423139158,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/39423139158",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 39423139847,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/39423139847",
+          "workflowName": "Dependabot Updates"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 38608248021,
+          "headSha": "f37145dfedc48b96d34ad607dc9f1ecb757c98d0",
+          "status": "completed",
+          "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/38608248021",
+          "workflowName": "Dependabot Updates"
+        }
+      ]
+    }
+  },
+  "go_proxy_info": {
+    "github.com/rushairer/gouno/@v/v1.4.0.info": {
+      "Version": "v1.4.0",
+      "Time": "2026-11-04T10:18:36Z",
+      "Origin": {
+        "VCS": "git",
+        "URL": "https://github.com/rushairer/gouno",
+        "Hash": "20efba0af181cb3e03c5bcb199576bfcdec1bd7f",
+        "Ref": "refs/tags/v1.4.0"
+      }
+    },
+    "github.com/rushairer/gouno-cli/@v/v1.3.0.info": {
+      "Version": "v1.3.0",
+      "Time": "2026-11-05T10:22:00Z",
+      "Origin": {
+        "VCS": "git",
+        "URL": "https://github.com/rushairer/gouno-cli",
+        "Hash": "087c00a523a6ec8c512d5eb9c65f657f6be8d5fb",
+        "Ref": "refs/tags/v1.3.0"
+      }
+    }
+  },
+  "accepted_runs": {
+    "41813309775": {
+      "conclusion": "success",
+      "headSha": "20efba0af181cb3e03c5bcb199576bfcdec1bd7f",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "test (1.27.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "lint",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "test (1.26.x)",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno/actions/runs/41813309775"
+    },
+    "41817614153": {
+      "conclusion": "success",
+      "headSha": "9f0cba9c8a6be6331f48596c83663efbec5490a2",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "verify (1.26.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "verify (1.27.x)",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-template/actions/runs/41817614153"
+    },
+    "42010113946": {
+      "conclusion": "success",
+      "headSha": "087c00a523a6ec8c512d5eb9c65f657f6be8d5fb",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "quality / Go lint",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "quality / Go quality (1.26.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "conventional-pr / Conventional PR title",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "quality / Go quality (1.27.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Default template integration (Go 1.26.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Default template integration (Go 1.27.x)",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-cli/actions/runs/42010113946"
+    },
+    "42011835603": {
+      "conclusion": "success",
+      "headSha": "5bd45c8f9946662274117c4644b31ce90a003464",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Architecture Invariants",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Integration Tests",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Helm Chart",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Vulnerability Check",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Lint",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Unit Tests",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Security (gosec)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Migration Rollback Test",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Build",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Conventional Commits",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Docker Build",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Security Scan",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gosso/actions/runs/42011835603"
+    },
+    "42013419089": {
+      "conclusion": "success",
+      "headSha": "5bd45c8f9946662274117c4644b31ce90a003464",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Release",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gosso/actions/runs/42013419089"
+    },
+    "42015368871": {
+      "conclusion": "success",
+      "headSha": "fad499f7f28ff2e86d03d5c26ae6de127222d915",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Documentation and workflow contracts",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-doc/actions/runs/42015368871"
+    },
+    "42011180831": {
+      "conclusion": "success",
+      "headSha": "ca372fc72379dbf63e6794f5d4e65af7c88e8ba7",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "conventional-pr / Conventional PR title",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "quality / Go quality (1.27.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "quality / Go quality (1.26.x)",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "quality / Go lint",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-agent-demo/actions/runs/42011180831"
+    },
+    "42015649627": {
+      "conclusion": "success",
+      "headSha": "64f4c437898eec66962cb966c840588eb331c9e1",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Gosso v1.7.0 acceptance",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gosso-admin/actions/runs/42015649627"
+    },
+    "42016283335": {
+      "conclusion": "success",
+      "headSha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Image publish contract",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Seed quality",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Compose config",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Frontend quality",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Isolated database integration",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Backend quality",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Dependency review",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-blog/actions/runs/42016283335"
+    },
+    "42016283306": {
+      "conclusion": "success",
+      "headSha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Gosso v1.7.0 BFF acceptance",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-blog/actions/runs/42016283306"
+    },
+    "42016283318": {
+      "conclusion": "success",
+      "headSha": "53d4a7c9eb781b12bc583800fdda3a62af515be2",
+      "jobs": [
+        {
+          "conclusion": "success",
+          "name": "Plan image builds",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Publish backend image",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Publish frontend image",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Publish seed image",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Publish release manifest",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/rushairer/gouno-blog/actions/runs/42016283318"
+    }
+  },
+  "official_go_module_verification": {
+    "GOPROXY": "https://proxy.golang.org",
+    "GOSUMDB": "sum.golang.org",
+    "fresh_module_cache": true,
+    "exit_code": 0,
+    "modules": [
+      {
+        "Path": "github.com/rushairer/gouno",
+        "Version": "v1.4.0",
+        "Sum": "h1:cCs2eGv6XCJMN4q2RFaFPCL1Ip0PY21RSHp3mT4tAYY=",
+        "GoModSum": "h1:S2DmlM4BlX3BLoeRw7s66aABDJDexP4Gj/xov28MmvA=",
+        "Origin": {
+          "VCS": "git",
+          "URL": "https://github.com/rushairer/gouno",
+          "Hash": "20efba0af181cb3e03c5bcb199576bfcdec1bd7f",
+          "Ref": "refs/tags/v1.4.0"
+        }
+      },
+      {
+        "Path": "github.com/rushairer/gouno-cli",
+        "Version": "v1.3.0",
+        "Sum": "h1:dL7sChra+i9zgpNxmdHFc/tYlBGhDHqfhHC0YWsyLD0=",
+        "GoModSum": "h1:UVjoYQk7M5sC7ziidDTT3zrG/KqzYBL8pSdM1kH1Pls=",
+        "Origin": {
+          "VCS": "git",
+          "URL": "https://github.com/rushairer/gouno-cli",
+          "Hash": "087c00a523a6ec8c512d5eb9c65f657f6be8d5fb",
+          "Ref": "refs/tags/v1.3.0"
+        }
+      },
+      {
+        "Path": "github.com/rushairer/gosso",
+        "Version": "v1.7.0",
+        "Sum": "h1:ZdnBcJycBnpKmpQ1hFLnOhzCj4DB2f6JYmhbGQY10s0=",
+        "GoModSum": "h1:5XTaKie4g0Vwjo0r95irL9Ph2MnXHA+t1EbriqRM2+w=",
+        "Origin": {
+          "VCS": "git",
+          "URL": "https://github.com/rushairer/gosso",
+          "Hash": "5bd45c8f9946662274117c4644b31ce90a003464",
+          "Ref": "refs/tags/v1.7.0"
+        }
+      }
+    ]
+  },
+  "npm_integrity_verification": [
+    {
+      "package": "@gouno/ui",
+      "version": "0.4.9",
+      "tarball": "https://registry.npmjs.org/@gouno/ui/-/ui-0.4.9.tgz",
+      "verified_sha512": "sha512-+mOkw+VL/whS2bBK8mQlU6kMHjL5AxleOE1qO2rK3xD58KZsQ6IyO+0S/UciKklvrJIH+qz/LhMUrJ04XxWjlQ==",
+      "gitHead": null,
+      "verified_consumer_locks": [
+        "gosso-admin/gosso-admin-frontend",
+        "gouno-blog/blog-frontend"
+      ]
+    },
+    {
+      "package": "@gosso/client",
+      "version": "0.9.3",
+      "tarball": "https://registry.npmjs.org/@gosso/client/-/client-0.9.3.tgz",
+      "verified_sha512": "sha512-weH+uD44qTxV6rGnvlaXXj9VHkulCiq6vk6NoHgd9P19eH8VL9e9g0G7aJOHcR+0nrJaD2yuYUXgAEUpI/F/Pg==",
+      "gitHead": "aa5c35e26474266386458da8f2dd357a5c8ee000",
+      "verified_consumer_locks": [
+        "gosso-admin/gosso-admin-frontend",
+        "gouno-blog/blog-frontend"
+      ]
+    }
+  ],
+  "gosso_artifact_verification": {
+    "verified_utc": "2026-11-05T11:02:23.001615+00:00",
+    "workflow": "https://github.com/rushairer/gosso/actions/runs/42013419089",
+    "release": "https://github.com/rushairer/gosso/releases/tag/v1.7.0",
+    "commit": "5bd45c8f9946662274117c4644b31ce90a003464",
+    "image": "ghcr.io/rushairer/gosso@sha256:b88b0475af7633afa8d6fda8ca7c3f4297d235a36e88219d9010818e76ff889a",
+    "cosign_version": "3.1.4",
+    "certificate_identity": "https://github.com/rushairer/gosso/.github/workflows/release.yml@refs/tags/v1.7.0",
+    "oidc_issuer": "https://token.actions.githubusercontent.com",
+    "cosign_verify_exit_code": 0,
+    "cosign_verify_attestation_exit_code": 0,
+    "cyclonedx_predicate_matches_downloaded_release_asset": true,
+    "sbom_assets": {
+      "gosso-sbom.cdx.json": {
+        "sha256": "bc9f1bff0d16ad5b2a8e37912dc3004948354cb8bd486f79b2bed3c8a0c7dbae",
+        "download_url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/gosso-sbom.cdx.json"
+      },
+      "gosso-sbom.spdx.json": {
+        "sha256": "8f73efe159ea68a9b2aeba70671d75a76ccc81faaa4bcec8a5007c51043a3175",
+        "download_url": "https://github.com/rushairer/gosso/releases/download/v1.7.0/gosso-sbom.spdx.json"
+      }
+    },
+    "helm_oci": "oci://ghcr.io/rushairer/gosso/charts/gosso",
+    "helm_version": "1.7.0",
+    "helm_app_version": "1.7.0",
+    "helm_manifest_digest": "sha256:97a538f2049c377218051bcaa58b225c77495e1140a4193c646afcac6601f33c",
+    "architecture_sboms": {
+      "linux/amd64": {
+        "format": "SPDX-2.3",
+        "packages": 102,
+        "source": "docker buildx imagetools inspect --format {{json .SBOM}}"
+      },
+      "linux/arm64": {
+        "format": "SPDX-2.3",
+        "packages": 102,
+        "source": "docker buildx imagetools inspect --format {{json .SBOM}}"
+      }
+    },
+    "sbom_release_asset_digests_match_github_metadata": true,
+    "trivy": {
+      "version": "0.76.1",
+      "severity": [
+        "HIGH",
+        "CRITICAL"
+      ],
+      "ignore_unfixed": false,
+      "exit_code": {
+        "amd64": 0,
+        "arm64": 0
+      },
+      "results": {
+        "amd64": {
+          "high_critical_findings": 0,
+          "architecture": "amd64",
+          "targets": [
+            {
+              "target": "ghcr.io/rushairer/gosso@sha256:b88b0475af7633afa8d6fda8ca7c3f4297d235a36e88219d9010818e76ff889a (alpine 3.24.3)",
+              "type": "alpine"
+            },
+            {
+              "target": "app/gosso",
+              "type": "gobinary"
+            }
+          ]
+        },
+        "arm64": {
+          "high_critical_findings": 0,
+          "architecture": "arm64",
+          "targets": [
+            {
+              "target": "ghcr.io/rushairer/gosso@sha256:b88b0475af7633afa8d6fda8ca7c3f4297d235a36e88219d9010818e76ff889a (alpine 3.24.3)",
+              "type": "alpine"
+            },
+            {
+              "target": "app/gosso",
+              "type": "gobinary"
+            }
+          ]
+        }
+      },
+      "database": {
+        "Version": 2,
+        "NextUpdate": "2026-11-06T07:00:54.926777259Z",
+        "UpdatedAt": "2026-11-05T07:00:54.926777429Z",
+        "DownloadedAt": "2026-11-05T11:16:53.370754Z"
+      }
+    }
+  }
+}
