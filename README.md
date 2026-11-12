@@ -46,7 +46,7 @@ A different template can expose `handler`, `usecase`, `module`, or any other gen
 
 Gouno only implements discovery, manifest validation, CLI construction, argument/flag handling, safe rendering, composition, overwrite policy, and Go formatting. Concrete generator names, parameters, output paths, and source templates belong to the project template.
 
-See [Template Codegen Specification v1](./docs/codegen-template-spec.md).
+See [Template Codegen Specification v1](./docs/codegen-template-spec.md) and the [documentation/evidence index](./docs/README.md).
 
 ## Philosophy
 
